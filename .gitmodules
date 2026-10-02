@@ -1,0 +1,27 @@
+[submodule "cc-core"]
+	path = cc-core
+	url = https://github.com/ChiliCraft/cc-core.git
+[submodule "cc-survival"]
+	path = cc-survival
+	url = https://github.com/ChiliCraft/cc-survival.git
+[submodule "cc-demon"]
+	path = cc-demon
+	url = https://github.com/ChiliCraft/cc-demon.git
+[submodule "cc-soul"]
+	path = cc-soul
+	url = https://github.com/ChiliCraft/cc-soul.git
+[submodule "cc-martial"]
+	path = cc-martial
+	url = https://github.com/ChiliCraft/cc-martial.git
+[submodule "cc-adventure"]
+	path = cc-adventure
+	url = https://github.com/ChiliCraft/cc-adventure.git
+[submodule "cc-season"]
+	path = cc-season
+	url = https://github.com/ChiliCraft/cc-season.git
+[submodule "cc-quest"]
+	path = cc-quest
+	url = https://github.com/ChiliCraft/cc-quest.git
+[submodule "docs"]
+	path = docs
+	url = https://github.com/ChiliCraft/docs.git

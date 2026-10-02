@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: 安装 JDK 21
         uses: actions/setup-java@v4
@@ -22,8 +24,8 @@ jobs:
       - name: 配置 Gradle 缓存
         uses: gradle/actions/setup-gradle@v4
 
-      # 各模块以 compileOnly(files("../test-server/plugins/...")) 引用若干第三方
-      # 软依赖，这些 jar 不入库。CI 先按构建脚本期望的文件名补齐，否则编译期缺类。
+      # 各模块以 compileOnly Maven 坐标编译；这些 jar 只用于 dist 部署包，
+      # 不入库。CI 按固定文件名下载运行时软依赖，交给 dist 汇总。
       - name: 补齐软依赖 jar（test-server/plugins）
         run: |
           set -euo pipefail

@@ -18,6 +18,30 @@ ChiliChill 2026 巡演「混入人类计划 II：方街」主题 Minecraft 服�
 
 ## 快速开始
 
+### 克隆与初始化子仓
+
+本仓保留聚合构建；八个 `cc-*` 插件仓和 [`ChiliCraft/docs`](https://github.com/ChiliCraft/docs) 文档仓均以 Git 子模块挂在原目录，提交版本由父仓固定。
+
+首次克隆时一次拉齐全部子仓：
+
+```bash
+git clone --recurse-submodules https://github.com/ChiliCraft/chilicraft.git
+```
+
+已有克隆可运行统一初始化入口（重复运行安全，不会自动追踪子仓最新提交）：
+
+```bash
+bash scripts/init-repos.sh
+```
+
+Windows PowerShell：
+
+```powershell
+.\scripts\init-repos.ps1
+```
+
+也可直接执行 `git submodule update --init --recursive`。插件子仓保留独立构建与 CI；从父仓构建时，`com.chilicraft:cc-core` 自动替换为本地 `:cc-core`，无需先发布核心到 Maven。修改模块时先在对应子仓提交并推送，再在父仓更新该路径的 gitlink；文档改动同理在 `docs/` 内提交，避免父仓引用尚未推送的提交。
+
 ### 环境
 
 - JDK 21（Gradle 工具链，缺失时由 Foojay resolver 自动下载；编译目标 Java 21 字节码）
@@ -36,7 +60,7 @@ ChiliChill 2026 巡演「混入人类计划 II：方街」主题 Minecraft 服�
 
 构建产物在各模块 `build/libs/*.jar`（cc-core 额外产出 shadowJar，已合并 shade 依赖）。执行 `.\gradlew.bat dist` 会把全部模块 jar 与 `test-server/plugins/` 下的运行时软依赖汇总到根 `build/dist/`，解压即为一层裸 jar，可直接整体丢进服务端 `plugins/`。
 
-每次 push 由 [.github/workflows/build.yml](.github/workflows/build.yml) 在 JDK 21 上自动执行 `gradlew build dist`；CI 会先把 `test-server/plugins/` 下的第三方软依赖 jar 按构建脚本期望的文件名补齐（这些 jar 不入库），再由 `dist` 任务把各模块 jar 与这些软依赖汇总到同一扁平目录，上传为构建产物。
+每次 push 由 [.github/workflows/build.yml](.github/workflows/build.yml) 递归检出固定版本的全部子仓，并在 JDK 21 上自动执行 `gradlew build dist`；模块通过 Maven 坐标解析编译期依赖，CI 另外补齐 `test-server/plugins/` 下的第三方运行时软依赖 jar（这些 jar 不入库），由 `dist` 任务把各模块 jar 与软依赖汇总到同一扁平目录，上传为构建产物。
 
 ### 部署
 

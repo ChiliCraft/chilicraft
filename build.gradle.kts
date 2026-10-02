@@ -39,6 +39,16 @@ subprojects {
     }
 }
 
+// 聚合构建直接使用已检出的核心，独立子仓仍保留自己的 Maven 依赖声明。
+allprojects {
+    configurations.configureEach {
+        resolutionStrategy.dependencySubstitution {
+            substitute(module("com.chilicraft:cc-core"))
+                .using(project(":cc-core"))
+        }
+    }
+}
+
 // 汇总产物：各模块最终 jar + test-server/plugins 下的运行时软依赖，便于整体部署。
 // 软依赖在模块里是 compileOnly，不会进模块 jar；部署时它们仍需单独安装到服务端
 // plugins/ 目录，因此这里一并输出。CI 会先补齐这些 jar 再调用本任务。

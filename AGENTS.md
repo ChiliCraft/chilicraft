@@ -4,7 +4,14 @@
 
 ## 项目是什么
 
-ChiliCraft：ChiliChill 2026 巡演「混入人类计划 II：方街」主题的 Paper 1.21.1 插件组。核心 `cc-core` 提供档案 / 全局模式 / 参数 / 事件总线 / 灵魂货币，玩法全部是附属模块（cc-survival / cc-demon / cc-soul / cc-martial；cc-street 规划中）。模块间**零编译期依赖**，只靠字符串事件名通信。
+ChiliCraft：ChiliChill 2026 巡演「混入人类计划 II：方街」主题的 Paper 1.21.1 插件组。核心 `cc-core` 提供档案 / 全局模式 / 参数 / 事件总线 / 灵魂货币，玩法全部是附属模块（cc-survival / cc-demon / cc-soul / cc-martial / cc-adventure / cc-season / cc-quest；cc-street 规划中）。附属间**零编译期依赖**，只靠字符串事件名通信。
+
+## 聚合仓与子仓
+
+- 本仓管理 Gradle 多工程、统一 CI 与发行包；八个 `cc-*` 和 `docs/` 均为独立 Git 子模块，文档远端为 `ChiliCraft/docs`。
+- 首次克隆用 `git clone --recurse-submodules https://github.com/ChiliCraft/chilicraft.git`；已有克隆运行 `bash scripts/init-repos.sh` 或 `.\scripts\init-repos.ps1`。
+- 子仓保持独立构建与 CI；聚合构建把 `com.chilicraft:cc-core` 替换为本地 `:cc-core`，不要求先发布核心。
+- 改模块或文档先在对应子仓提交并推送，再更新父仓 gitlink；不要把未推送的子仓提交固定到父仓。
 
 ## 必读顺序
 
@@ -24,13 +31,14 @@ ChiliCraft：ChiliChill 2026 巡演「混入人类计划 II：方街」主题的
 .\gradlew.bat build --offline
 ```
 
-- 环境：Windows + PowerShell；JDK 21 工具链（缺失自动下载），编译目标 Java 21 字节码
+- Windows 用 PowerShell；macOS / Linux 在根目录用 `sh gradlew build`。JDK 21 工具链（缺失自动下载），编译目标 Java 21 字节码
 - **验收标准：`gradlew build`（或 --offline）BUILD SUCCESSFUL**。不要尝试启动 Minecraft 服务端验证
 - 构建失败先分清两类：网络类（papermc 元数据 / TLS handshake → 换 `--offline`）与代码类（正常修）
 
 ## 环境坑（不要踩）
 
 - **GBK**：中文 Windows 默认 GBK。JDK 17 编译 worker 会按平台编码读 daemon 写出的 argfile，GRADLE_USER_HOME 路径含中文即崩——这是项目用 JDK 21 工具链的原因，见根 [build.gradle.kts](build.gradle.kts) 注释，**不要改回 17**
+- Gradle 8.10.2 不支持 Java 25；macOS 构建时用 `JAVA_HOME=$(/usr/libexec/java_home -v 21)` 明确选择 JDK 21。
 - 源码、配置、文档一律 UTF-8
 - 不要在 PowerShell 用 `&&`（不支持），用 `;` 或分开执行
 
@@ -66,7 +74,7 @@ ChiliCraft：ChiliChill 2026 巡演「混入人类计划 II：方街」主题的
 
 | 改动类型 | 必须同步的资料 |
 |---|---|
-| 新建子插件 | settings.gradle.kts include、[README.md](README.md) 模块总览表、[architecture.md](docs/architecture.md) 工程结构、[events-protocol.md](docs/events-protocol.md)（有新事件先登记）、沉淀出新范式时更新 [module-dev-guide.md](docs/module-dev-guide.md) |
+| 新建子插件 | 新建独立模块仓并登记子模块、settings.gradle.kts include、[README.md](README.md) 模块总览表与 [docs/README.md](docs/README.md) 仓库结构表、[architecture.md](docs/architecture.md) 工程结构、[events-protocol.md](docs/events-protocol.md)（有新事件先登记）、沉淀出新范式时更新 [module-dev-guide.md](docs/module-dev-guide.md) |
 | 新增 / 变更事件 | [events-protocol.md](docs/events-protocol.md) 清单（先登记后编码，含字段约定与订阅方行为） |
 | 改动巡演联动点 / 名单机制 | [README.md](README.md) 巡演联动一览、模块 config.yml 注释与默认值 |
 | 改动周期任务 / 性能相关行为 | [performance.md](docs/performance.md) 周期表与红线口径 |
