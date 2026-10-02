@@ -118,4 +118,4 @@ Windows PowerShell：
 | [docs/development-plan.md](docs/development-plan.md) | 后续开发计划：现状差距、M0–M5 里程碑排期、风险与验收标准 |
 | [docs/copywriting-requests.md](docs/copywriting-requests.md) | T0.6 内容提请：《文案手册》与数值校准需求清单（按里程碑分四批，可直接转交主创） |
 | [AGENTS.md](AGENTS.md) | AI agent 操作指引：构建/验收/约定速查 |
-| [ChiliCraft·插件版技术文档（实现规格 v1.0） (1).md](<ChiliCraft·插件版技术文档（实现规格 v1.0） (1).md>) | 完整实现规格（v1.1，含 cc-street 规格与巡演映射表） |
+| [ChiliCraft·插件版技术文档（实现规格 v1.1）](<docs/ChiliCraft·插件版技术文档（实现规格 v1.1）.md>) | 完整实现规格（v1.1，含 cc-street 规格与巡演映射表） |
