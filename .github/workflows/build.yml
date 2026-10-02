@@ -41,12 +41,19 @@ jobs:
       - name: 构建
         run: sh gradlew build --no-daemon
 
+      # 先拷贝到扁平目录，再上传该目录，产物内即为裸 jar。
+      - name: 收集构建产物到单一目录
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          mkdir -p dist
+          find cc-*/build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-plain.jar' -exec cp {} dist/ \;
+          ls -l dist
+
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
           name: chilicraft-plugins
-          path: |
-            cc-*/build/libs/*.jar
-            !cc-*/build/libs/*-plain.jar
+          path: dist/*.jar
           if-no-files-found: error
           retention-days: 14
