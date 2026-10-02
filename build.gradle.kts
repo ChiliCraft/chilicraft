@@ -38,3 +38,25 @@ subprojects {
         }
     }
 }
+
+// 汇总产物：各模块最终 jar + test-server/plugins 下的运行时软依赖，便于整体部署。
+// 软依赖在模块里是 compileOnly，不会进模块 jar；部署时它们仍需单独安装到服务端
+// plugins/ 目录，因此这里一并输出。CI 会先补齐这些 jar 再调用本任务。
+tasks.register<Sync>("dist") {
+    group = "build"
+    description = "汇总所有模块 jar 与 test-server/plugins 下的软依赖到 build/dist"
+
+    subprojects.forEach { sub ->
+        dependsOn(sub.tasks.matching { it.name == "build" })
+    }
+
+    from(subprojects.map { it.layout.buildDirectory.dir("libs") }) {
+        include("*.jar")
+        // cc-core 的原始 jar（*-plain.jar）不对外，只保留 shadowJar
+        exclude("*-plain.jar")
+    }
+    from(layout.projectDirectory.dir("test-server/plugins")) {
+        include("*.jar")
+    }
+    into(layout.buildDirectory.dir("dist"))
+}
