@@ -1,0 +1,138 @@
+# ============================================================
+# cc-adventure · 世界 Boss 定义（5 个，总纲口径）
+# 修改后由 /cc reload 热载（BossContent 整体重建注册表）
+#
+# trigger 触发类型：
+#   NIGHT_DEATH_STREAK 连续夜间死亡 N 次（trigger-param=阈值）
+#                      ★ 按每名玩家分别累计，非夜间死亡只重置本人连击 ★
+#   RAIN_OCEAN         雨天且身处深海群系（trigger-param=每次巡检触发概率%）
+#   THUNDER            雷暴天气（trigger-param=每次巡检触发概率%）
+#   RANDOM             任意时刻低概率（trigger-param=每次巡检触发概率%）
+#   DEPTH              身处深层 y < trigger-param（半梦界深层占位）
+#
+# 原版路径技能（integration.mythicmobs=false 时生效）：
+#   SUMMON    召唤护卫（summon=实体类型, count=数量）
+#   EFFECT    对周围玩家施放药水效果（effect=类型, amplifier=强度, radius=半径）
+#   LIGHTNING 对周围随机玩家落雷（radius=半径）
+#
+# mythic-id 非空且 MM 在场时改由 MM 生成（技能交 MM 配置接管）；
+# MM 缺失或生成失败自动降级原版实体路径。
+# ============================================================
+
+bosses:
+
+  demon_mother:
+    display: 饿魔母体·真身
+    entity: RAVAGER
+    health: 3000
+    attack: 12
+    trigger: NIGHT_DEATH_STREAK
+    trigger-param: 3          # 同一玩家连续 3 次夜间死亡（按玩家分别累计）
+    first-kill-soul: 300
+    mythic-id: ""
+    skills:
+      brood:
+        type: SUMMON
+        summon: ZOMBIE        # 饿魔幼体
+        count: 4
+      gnaw:
+        type: EFFECT
+        effect: hunger
+        amplifier: 1
+        radius: 12
+      roar:
+        type: LIGHTNING
+        radius: 12
+    enabled: true
+
+  water_shadow:
+    display: 水做之影
+    entity: DROWNED
+    health: 2500
+    attack: 10
+    trigger: RAIN_OCEAN
+    trigger-param: 20         # 雨天深海，每次巡检 20%
+    first-kill-soul: 250
+    mythic-id: ""
+    skills:
+      tide:
+        type: SUMMON
+        summon: DROWNED
+        count: 3
+      drag:
+        type: EFFECT
+        effect: slowness
+        amplifier: 1
+        radius: 10
+    enabled: true
+
+  typhoon_eye:
+    display: 台风之眼
+    entity: PHANTOM
+    health: 2800
+    attack: 11
+    trigger: THUNDER
+    trigger-param: 25         # 雷暴天，每次巡检 25%
+    first-kill-soul: 280
+    mythic-id: ""
+    skills:
+      gust:
+        type: EFFECT
+        effect: levitation
+        amplifier: 0
+        radius: 8
+      storm:
+        type: LIGHTNING
+        radius: 16
+      eyewall:
+        type: SUMMON
+        summon: PHANTOM
+        count: 2
+    enabled: true
+
+  mirror_parrot:
+    display: 幻形鹦鹉
+    entity: PARROT
+    health: 2000
+    attack: 6
+    trigger: RANDOM
+    trigger-param: 5          # 每次巡检 5%
+    first-kill-soul: 200
+    mythic-id: ""
+    skills:
+      flock:
+        type: SUMMON
+        summon: VEX
+        count: 3
+      mimic:
+        type: EFFECT
+        effect: blindness
+        amplifier: 0
+        radius: 10
+    enabled: true
+
+  nightmare:
+    display: 梦魇
+    entity: WITHER_SKELETON
+    health: 4000
+    attack: 14
+    trigger: DEPTH
+    trigger-param: 0          # 深层 y<0（半梦界深层占位）
+    first-kill-soul: 400
+    mythic-id: ""
+    skills:
+      dread:
+        type: EFFECT
+        effect: wither
+        amplifier: 1
+        radius: 8
+      darkfall:
+        type: EFFECT
+        effect: blindness
+        amplifier: 0
+        radius: 12
+      haunt:
+        type: SUMMON
+        summon: PHANTOM
+        count: 2
+    enabled: true

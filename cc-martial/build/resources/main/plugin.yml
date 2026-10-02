@@ -1,0 +1,31 @@
+# ChiliCraft 武学附属（cc-martial）
+name: cc-martial
+version: "1.0.0"
+main: com.chilicraft.martial.ChiliMartialPlugin
+api-version: "1.21"
+authors: [ChiliCraft]
+description: 武学/擂台：6 层武学境界 / 5 流派技能 / 45 词缀 / 每日擂台
+
+# 硬依赖核心：核心未启用时本附属自动禁用
+# 软依赖：PlaceholderAPI（变量暴露）/ Vault（擂台奖励加成）/ MythicMobs（武品与技能特效）
+depend: [cc-core]
+# 兼容基线：兼容的核心 API 版本（核心装载时校验，未达标给出可读告警）
+compatible-core: ">=1.0"
+softdepend: [PlaceholderAPI, Vault, MythicMobs]
+
+commands:
+  martial:
+    description: 武学命令（面板 / 流派 / 技能 / 擂台 / 管理）
+    usage: /martial <menu|school|skills|arena|admin|reload>
+    permission: chilicraft.martial.use
+
+permissions:
+  chilicraft.martial.use:
+    description: 允许使用武学模块
+    default: true
+  chilicraft.martial.user:
+    description: 允许使用 /martial 玩家命令
+    default: true
+  chilicraft.martial.admin:
+    description: 允许使用 /martial admin 管理操作（境界调整 / 词缀施加）
+    default: op

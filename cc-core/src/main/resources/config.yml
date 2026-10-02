@@ -1,0 +1,132 @@
+# ============================================================
+#  ChiliCraft 核心配置（cc-core）
+#
+#  * 所有面向玩家的文本均为 MiniMessage 格式：
+#    <gold>金色</gold>、<newline> 换行 等
+#  * 文本中的 <xxx> 形式占位符由插件运行时注入，请保留
+#  * 数值键缺失或非法时回退内置默认值并在控制台告警
+# ============================================================
+
+# ---------- 全局模式 ----------
+mode:
+  # 新玩家默认全局模式：adventure = 冒险 / cozy = 养老
+  default: cozy
+
+# 模式切换冷却（小时）；0 = 无冷却。切换后该时间内不可再次切换
+switch-cooldown-hours: 24
+
+# ---------- 家园区 ----------
+home-zone:
+  # 家园区半径（格；以锚点为中心的 XZ 圆柱区域，不比较 Y）
+  radius: 128
+  # 家园区内怪物生成倍率（0.1 = 区内刷怪降至 10%）
+  mob-multiplier: 0.1
+  # 家园区内是否允许饿魔事件（cc-demon 附属）
+  demon-enabled: false
+
+# ---------- 模式参数（1.0 = 原版基准） ----------
+params:
+  adventure:
+    hunger-decay: 1.0      # 饥饿消耗速度
+    drop-rate: 1.0         # 掉落倍率
+    weight-limit: 1.0      # 负重上限倍率
+    mob-spawn-rate: 1.0    # 自然刷怪倍率
+    durability-cost: 1.0   # 耐久消耗倍率
+  cozy:
+    hunger-decay: 0.3
+    drop-rate: 1.5
+    weight-limit: 1.0
+    mob-spawn-rate: 0.3
+    durability-cost: 0.3
+
+# ---------- 灵魂货币 ----------
+economy:
+  # 货币显示名
+  soul-name: "灵魂"
+  # 死亡损失灵魂百分比（0-100；cc-survival 等附属读取）
+  soul-loss-pct: 50.0
+
+# ---------- 持久化 ----------
+auto-save:
+  # 档案自动保存间隔（秒；下限 5，防止误配打爆调度器）
+  interval-seconds: 60
+
+# ---------- 外部联动开关 ----------
+# 全部为软依赖：本体插件未安装时自然不生效，缺失走内置降级方案
+integrations:
+  placeholders: true   # PlaceholderAPI
+  vault: true          # Vault
+  mythicmobs: true     # MythicMobs
+  citizens: true       # Citizens（NPC）
+  essentials: true     # EssentialsX（缺失时 /cc 内置传送）
+  worldguard: true     # WorldGuard
+  luckperms: true      # LuckPerms
+
+# ---------- 消息模板（MiniMessage） ----------
+messages:
+  # —— 通用 ——
+  no-permission: "<red>你没有权限执行此操作。"
+  player-only: "<red>该指令仅玩家可用。"
+  profile-missing: "<red>档案尚未加载完成，请稍后再试。"
+  usage: "<red>用法：<yellow><usage></yellow>"
+  help: "<gold>===== ChiliCraft 指令 =====<newline><yellow>/cc <gray>—— 打开主菜单<newline><yellow>/cc mode 「adventure|cozy」 <gray>—— 切换全局模式<newline><yellow>/cc info <gray>—— 查看我的档案<newline><yellow>/cc soul <gray>—— 查询灵魂余额<newline><yellow>/cc sethome <gray>—— 设置家园区锚点<newline><yellow>/cc home <gray>—— 传送回家园区锚点<newline><yellow>/cc reload <gray>—— 重载配置（管理员）"
+  reload-done: "<green>ChiliCraft 配置已重载。"
+
+  # —— 模式 ——
+  mode-switched: "<green>已切换到 <mode> 模式。"
+  mode-already: "<yellow>你已处于 <mode> 模式。"
+  mode-cooldown: "<red>模式切换冷却中，剩余约 <minutes> 分钟。"
+  mode-invalid: "<red>未知模式「<name>」，可用：adventure / cozy。"
+
+  # —— 档案信息（/cc info 与主菜单头像共用） ——
+  info-mode: "<gray>当前模式：<white><mode></white>"
+  info-soul: "<gray><name>余额：<yellow><amount></yellow>"
+  info-realm: "<gray>武学境界：<aqua><realm></aqua>"
+  info-profession: "<gray>职业：<white><profession></white>"
+  info-home: "<gray>家园区：<white><home></white>"
+
+  # —— 灵魂 ——
+  soul-balance: "<gray>当前 <name> 余额：<yellow><amount></yellow>"
+
+  # —— 家园区 ——
+  home-set: "<green>家园区锚点已设置，半径 <radius> 格内适用家园区参数。"
+  home-not-set: "<red>你还未设置家园区锚点，请先使用 /cc sethome。"
+  home-world-missing: "<red>家园区所在世界已不存在。"
+  home-teleported: "<green>已传送回家园区锚点。"
+
+  # —— 统一菜单 ——
+  menu-title: "<dark_gray>ChiliCraft 主菜单"
+  category-title: "<dark_gray>ChiliCraft 分类"
+  category-name: "<gold><category>"
+  category-description: "<gray>浏览该分类模块。"
+  menu-mode-name: "<green>模式切换"
+  menu-home-name: "<aqua>家园"
+  menu-home-lore: "<gray>传送到家园区锚点"
+  menu-help-name: "<aqua>帮助中心"
+  menu-help-lore: "<gray>查看指令与模块说明"
+  menu-balance-name: "<yellow>灵魂余额"
+  menu-balance-lore: "<gray>查看当前灵魂余额"
+  menu-back-name: "<yellow>返回主菜单"
+  menu-back-lore: "<gray>返回分类导航"
+  menu-close-lore: "<gray>关闭菜单"
+  help-title: "<dark_gray>帮助中心"
+  help-name: "<gold>ChiliCraft 帮助"
+  help-description: "<gray>/menu、/cc menu 打开主菜单；/cc help 查看指令。"
+  admin-title: "<dark_gray>ChiliCraft 管理中心"
+  admin-name: "<red>管理中心"
+  admin-description: "<gray>仅提供低风险状态与帮助入口。"
+  admin-help-name: "<yellow>模块帮助"
+  admin-help-lore: "<gray>查看已注册模块说明"
+  module-planned: "<yellow>该模块正在开发中。"
+  module-unavailable: "<yellow>该模块暂不可用。"
+  module-action-failed: "<red>模块操作失败，请稍后再试。"
+  module-command-failed: "<red>模块指令执行失败，请稍后再试。"
+  # —— 主菜单 ——
+  menu-info-name: "<gold>我的档案"
+  menu-mode-adventure-name: "<red>冒险模式"
+  menu-mode-adventure-lore: "<gray>完整的生存压力：饥饿、掉落、刷怪、损耗全开"
+  menu-mode-cozy-name: "<green>养老模式"
+  menu-mode-cozy-lore: "<gray>宽松生存：各项数值压力大幅降低"
+  menu-mode-current: "<gold>◆ 当前模式"
+  menu-mode-hint: "<dark_gray>切换后 <hours> 小时内不可再次切换"
+  menu-close: "<red>关闭"

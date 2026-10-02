@@ -1,0 +1,30 @@
+# ChiliCraft 夜晚饿魔附属（cc-demon）
+name: cc-demon
+version: "${version}"
+main: com.chilicraft.demon.ChiliDemonPlugin
+api-version: "1.21"
+authors: [ChiliCraft]
+description: 夜晚饿魔：夜晚刷新 / 饿意追踪 / 击杀掉落（按全局模式调节刷怪强度）；/demon 管理菜单
+
+# 硬依赖核心：核心未启用时本附属自动禁用
+depend: [cc-core]
+# 兼容基线：兼容的核心 API 版本（核心装载时校验，未达标给出可读告警）
+compatible-core: ">=1.0"
+# MythicMobs 可选：在场且 integration.mythicmobs 开启时接管饿魔技能与行为（缺失自动降级）
+softdepend: [MythicMobs]
+
+commands:
+  demon:
+    description: 饿魔管理命令（管理菜单 / 状态 / 清除 / 手动生成 / 重载）
+    usage: /demon <menu|status|admin|clear|spawn|reload>
+    permission: chilicraft.demon.use
+
+permissions:
+  chilicraft.demon.use:
+    description: 允许查看饿魔状态
+    default: true
+  chilicraft.demon.admin:
+    description: 允许使用饿魔管理命令
+    default: op
+    children:
+      chilicraft.demon.use: true

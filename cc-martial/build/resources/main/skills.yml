@@ -1,0 +1,582 @@
+# ============================================================
+# cc-martial 内容定义（数据驱动，可整包替换）
+# 结构：schools 流派定义 / skills 各流派技能 / affixes 词缀
+# 说明：params 键名由结算代码约定；fx 为原版音效/粒子（MythicMobs
+#       在场且 mythic-skill 有值时由 MM 托管特效，失败自动回退 fx）
+# ============================================================
+
+# ---------- 流派（拜入后不可转派） ----------
+schools:
+  zhuojin:
+    display: "拙劲"
+    # 流派武品：MythicMobs 物品 id（联动关闭或物品缺失时回退 vanilla-weapon）
+    mythic-weapon: "ZhuoJinBlade"
+    vanilla-weapon: IRON_SWORD
+  xiuhua:
+    display: "绣花"
+    mythic-weapon: "XiuHuaNeedle"
+    vanilla-weapon: IRON_SWORD
+  tongqian:
+    display: "铜钱"
+    mythic-weapon: "TongQianCoin"
+    vanilla-weapon: IRON_SWORD
+  caobing:
+    display: "草柄"
+    mythic-weapon: "CaoBingStaff"
+    vanilla-weapon: IRON_SWORD
+  suqing:
+    display: "素青"
+    mythic-weapon: "SuQingFan"
+    vanilla-weapon: IRON_SWORD
+
+# ---------- 技能（每流派 4 主动 + 2 被动） ----------
+# 主动技能键：display / type / required-realm(境界) / cooldown(秒) / params / fx
+# 被动技能键：display / type / required-realm / params（常驻结算，无需装备）
+# params 数值随技能等级缩放：× (1 + 0.1 × (等级-1))；multiplier 不缩放
+skills:
+  zhuojin:
+    bengshanji:
+      display: "崩山击"
+      type: AOE_DAMAGE
+      required-realm: 0
+      cooldown: 8
+      params:
+        radius: 3.5
+        damage: 8
+      fx:
+        sound: ENTITY_GENERIC_EXPLODE
+        particle: EXPLOSION_LARGE
+    liechong:
+      display: "裂地突冲"
+      type: DASH
+      required-realm: 1
+      cooldown: 6
+      params:
+        speed: 2.0
+      fx:
+        sound: ENTITY_PLAYER_ATTACK_SWEEP
+        particle: SWEEP_ATTACK
+    nujin:
+      display: "怒目金刚"
+      type: SHIELD
+      required-realm: 2
+      cooldown: 30
+      params:
+        amount: 6
+        duration-ticks: 100
+      fx:
+        sound: BLOCK_ANVIL_LAND
+        particle: CRIT
+    jinglei:
+      display: "惊雷一击"
+      type: STRIKE
+      required-realm: 3
+      cooldown: 20
+      params:
+        bonus-damage: 10
+        duration-ticks: 60
+      fx:
+        sound: ENTITY_LIGHTNING_BOLT_THUNDER
+        particle: SWEEP_ATTACK
+    tiegu:
+      display: "铁骨"
+      type: DAMAGE_REDUCTION
+      required-realm: 0
+      params:
+        pct: 4
+    manli:
+      display: "蛮力"
+      type: LIFESTEAL
+      required-realm: 2
+      params:
+        pct: 5
+  xiuhua:
+    feizhen:
+      display: "飞针引线"
+      type: STRIKE
+      required-realm: 0
+      cooldown: 12
+      params:
+        bonus-damage: 6
+        duration-ticks: 80
+      fx:
+        sound: ENTITY_PLAYER_ATTACK_SWEEP
+        particle: SWEEP_ATTACK
+    liuying:
+      display: "柳影迷踪"
+      type: SPEED_BUFF
+      required-realm: 1
+      cooldown: 25
+      params:
+        amplifier: 1
+        duration-ticks: 120
+      fx:
+        sound: ENTITY_RABBIT_JUMP
+        particle: CLOUD
+    qiansi:
+      display: "千丝缠绕"
+      type: SLOW_FIELD
+      required-realm: 2
+      cooldown: 18
+      params:
+        radius: 4
+        amplifier: 2
+        duration-ticks: 80
+      fx:
+        sound: BLOCK_COBWEB_PLACE
+        particle: SNOWFLAKE
+    yanhui:
+      display: "燕回闪"
+      type: DASH
+      required-realm: 3
+      cooldown: 8
+      params:
+        speed: 2.5
+      fx:
+        sound: ENTITY_PHANTOM_FLAP
+        particle: SWEEP_ATTACK
+    qiaojin:
+      display: "巧劲"
+      type: CRIT_CHANCE
+      required-realm: 0
+      params:
+        pct: 10
+        multiplier: 1.5
+    qingying:
+      display: "轻盈"
+      type: SPEED_BOOST
+      required-realm: 2
+      params:
+        amplifier: 0
+  tongqian:
+    jinzhong:
+      display: "金钟罩"
+      type: SHIELD
+      required-realm: 0
+      cooldown: 45
+      params:
+        amount: 10
+        duration-ticks: 200
+      fx:
+        sound: BLOCK_ANVIL_USE
+        particle: CRIT
+    fazhen:
+      display: "反震波"
+      type: AOE_DAMAGE
+      required-realm: 1
+      cooldown: 15
+      params:
+        radius: 4
+        damage: 5
+        knockback: 1.5
+      fx:
+        sound: ENTITY_IRON_GOLEM_ATTACK
+        particle: EXPLOSION
+    huwei:
+      display: "铜钱护体"
+      type: HEAL
+      required-realm: 2
+      cooldown: 40
+      params:
+        amount: 8
+      fx:
+        sound: BLOCK_AMETHYST_BLOCK_CHIME
+        particle: HAPPY_VILLAGER
+    dingshen:
+      display: "定身咒"
+      type: SLOW_FIELD
+      required-realm: 3
+      cooldown: 20
+      params:
+        radius: 3
+        amplifier: 3
+        duration-ticks: 60
+      fx:
+        sound: BLOCK_BEACON_DEACTIVATE
+        particle: SQUID_INK
+    jingang:
+      display: "金刚不坏"
+      type: DAMAGE_REDUCTION
+      required-realm: 0
+      params:
+        pct: 6
+    yangqi:
+      display: "养气"
+      type: REGEN
+      required-realm: 2
+      params:
+        amount: 1
+  caobing:
+    duzhang:
+      display: "毒瘴散"
+      type: SLOW_FIELD
+      required-realm: 0
+      cooldown: 20
+      params:
+        radius: 4.5
+        amplifier: 1
+        duration-ticks: 100
+        poison: 1
+      fx:
+        sound: ENTITY_WITCH_THROW
+        particle: SPELL_WITCH
+    xisui:
+      display: "吸髓夺元"
+      type: LIFESTEAL_STRIKE
+      required-realm: 1
+      cooldown: 25
+      params:
+        pct: 60
+        duration-ticks: 60
+      fx:
+        sound: ENTITY_WITHER_HURT
+        particle: DAMAGE_INDICATOR
+    shehun:
+      display: "摄魂引"
+      type: PULL
+      required-realm: 2
+      cooldown: 14
+      params:
+        radius: 4
+      fx:
+        sound: ENTITY_ENDERMAN_TELEPORT
+        particle: PORTAL
+    fugu:
+      display: "腐骨蚀心"
+      type: AOE_DAMAGE
+      required-realm: 3
+      cooldown: 22
+      params:
+        radius: 4
+        damage: 6
+      fx:
+        sound: ENTITY_ZOMBIE_ATTACK_IRON_DOOR
+        particle: SMOKE_NORMAL
+    shigu:
+      display: "蚀骨"
+      type: CRIT_CHANCE
+      required-realm: 0
+      params:
+        pct: 8
+        multiplier: 1.4
+    shixue:
+      display: "噬血"
+      type: LIFESTEAL
+      required-realm: 2
+      params:
+        pct: 4
+  suqing:
+    shaying:
+      display: "素青纱影"
+      type: LEAP
+      required-realm: 0
+      cooldown: 14
+      params:
+        power: 1.0
+        damage: 6
+        radius: 3
+      fx:
+        sound: ENTITY_ENDER_DRAGON_FLAP
+        particle: CLOUD
+    fengbu:
+      display: "风步"
+      type: SPEED_BUFF
+      required-realm: 1
+      cooldown: 30
+      params:
+        amplifier: 2
+        duration-ticks: 100
+      fx:
+        sound: ENTITY_BREEZE_SHOOT
+        particle: CLOUD
+    liaofeng:
+      display: "撩风拨月"
+      type: PULL
+      required-realm: 2
+      cooldown: 18
+      params:
+        radius: 5
+      fx:
+        sound: ENTITY_FISHING_BOBBER_SPLASH
+        particle: SWEEP_ATTACK
+    yuexia:
+      display: "月下独舞"
+      type: SHIELD
+      required-realm: 3
+      cooldown: 25
+      params:
+        amount: 5
+        duration-ticks: 120
+      fx:
+        sound: MUSIC_END
+        particle: END_ROD
+    yufeng:
+      display: "御风"
+      type: SPEED_BOOST
+      required-realm: 0
+      params:
+        amplifier: 1
+    diewu:
+      display: "蝶舞"
+      type: CRIT_CHANCE
+      required-realm: 2
+      params:
+        pct: 12
+        multiplier: 1.5
+
+# ---------- 词缀（45 条，事件钩子结算） ----------
+# 通用键：display(改名附加) / tier(1-3: 绿/蓝/金) / hook(ATTACK|DAMAGED|HUNGER|WATER|KILL|PASSIVE) / params
+# params 约定：
+#   chance            触发概率%（缺省 100 = 必发；作用于该条词缀全部效果）
+#   bonus-damage      固定附加伤害（ATTACK）
+#   burn-seconds      点燃秒数（ATTACK）
+#   heal              自回血量（ATTACK 吸血 / DAMAGED 止血 / PASSIVE 周期回血 / KILL 击杀回血）
+#   self-hunger       自耗饱食（ATTACK，先扣 saturation 不足扣 1 food）
+#   reduce-pct        减伤百分比（DAMAGED）
+#   thorns            反伤固定值（DAMAGED，对攻击者）
+#   save-chance       取消概率%（HUNGER 饱食降低减免 / WATER 氧气消耗减免）
+#   heal-on-eat       进食回血（HUNGER）
+#   max-air-bonus     最大氧气加成（WATER，卸下后回落原版 300）
+#   food              回饱食点数（KILL）
+#   absorption/every  黄心量 / 间隔心跳（PASSIVE）
+#   potion            药水效果（ATTACK 施于目标 / DAMAGED 反施攻击者 / KILL 自身 / PASSIVE 常驻），
+#                     配 amplifier(等级, 缺省 0) + duration-seconds(秒, 缺省 3；PASSIVE 常驻无此键)
+#   1.21.1 药水键名：slowness / weakness / poison / strength / resistance / speed / night_vision
+# 扫描槽位：ATTACK/KILL 查主手；DAMAGED/HUNGER/WATER/PASSIVE 查主手+四盔甲
+affixes:
+# ===== ATTACK（命中，12 条）=====
+  fengrui:
+    display: "锋锐"
+    tier: 1
+    hook: ATTACK
+    params: {bonus-damage: 1.0}
+  hanla:
+    display: "狠辣"
+    tier: 2
+    hook: ATTACK
+    params: {bonus-damage: 2.5}
+  cuikua:
+    display: "摧枯拉朽"
+    tier: 3
+    hook: ATTACK
+    params: {bonus-damage: 4.5}
+  zhuore:
+    display: "灼热"
+    tier: 2
+    hook: ATTACK
+    params: {chance: 20, burn-seconds: 3}
+  binghan:
+    display: "冰寒"
+    tier: 2
+    hook: ATTACK
+    params: {chance: 20, potion: slowness, amplifier: 1, duration-seconds: 3}
+  dushi:
+    display: "毒蚀"
+    tier: 2
+    hook: ATTACK
+    params: {chance: 15, potion: POISON, amplifier: 1, duration-seconds: 4}
+  zhican:
+    display: "致残"
+    tier: 1
+    hook: ATTACK
+    params: {chance: 12, potion: WEAKNESS, amplifier: 1, duration-seconds: 4}
+  xixue:
+    display: "吸血"
+    tier: 3
+    hook: ATTACK
+    params: {heal: 0.8}
+  hanqi:
+    display: "撼气"
+    tier: 3
+    hook: ATTACK
+    params: {chance: 10, bonus-damage: 3.0}
+  pofeng:
+    display: "破风"
+    tier: 1
+    hook: ATTACK
+    params: {chance: 15, bonus-damage: 1.5}
+  duopo:
+    display: "夺魄"
+    tier: 3
+    hook: ATTACK
+    params: {chance: 6, bonus-damage: 2.0}
+  manhuang:
+    display: "蛮荒"
+    tier: 2
+    hook: ATTACK
+    params: {bonus-damage: 2.0, self-hunger: 0.5}
+
+# ===== DAMAGED（受击，9 条）=====
+  jianren:
+    display: "坚韧"
+    tier: 1
+    hook: DAMAGED
+    params: {reduce-pct: 4}
+  tiegu:
+    display: "铁骨"
+    tier: 2
+    hook: DAMAGED
+    params: {reduce-pct: 8}
+  jinshen:
+    display: "金身"
+    tier: 3
+    hook: DAMAGED
+    params: {reduce-pct: 14}
+  jingji:
+    display: "荆棘"
+    tier: 2
+    hook: DAMAGED
+    params: {thorns: 1.5}
+  jianciqiaoke:
+    display: "尖刺外壳"
+    tier: 3
+    hook: DAMAGED
+    params: {thorns: 3.0}
+  xiali:
+    display: "卸力"
+    tier: 2
+    hook: DAMAGED
+    params: {chance: 15, reduce-pct: 30}
+  cidu:
+    display: "淬毒"
+    tier: 2
+    hook: DAMAGED
+    params: {chance: 12, potion: POISON, amplifier: 1, duration-seconds: 3}
+  hanjia:
+    display: "寒甲"
+    tier: 2
+    hook: DAMAGED
+    params: {chance: 12, potion: slowness, amplifier: 1, duration-seconds: 3}
+  zhixue:
+    display: "止血"
+    tier: 1
+    hook: DAMAGED
+    params: {chance: 20, heal: 0.5}
+
+# ===== HUNGER（饱食，6 条）=====
+  baofu:
+    display: "饱腹"
+    tier: 1
+    hook: HUNGER
+    params: {save-chance: 10}
+  guqi:
+    display: "谷气"
+    tier: 2
+    hook: HUNGER
+    params: {save-chance: 20}
+  bigu:
+    display: "辟谷"
+    tier: 3
+    hook: HUNGER
+    params: {save-chance: 30}
+  shiqi:
+    display: "食气"
+    tier: 1
+    hook: HUNGER
+    params: {heal-on-eat: 1.0}
+  ganlu:
+    display: "甘露"
+    tier: 2
+    hook: HUNGER
+    params: {heal-on-eat: 2.0}
+  zhenxi:
+    display: "珍馐"
+    tier: 3
+    hook: HUNGER
+    params: {heal-on-eat: 3.0}
+
+# ===== WATER（氧气，6 条）=====
+  guixi:
+    display: "龟息"
+    tier: 1
+    hook: WATER
+    params: {save-chance: 20}
+  shuidun:
+    display: "水遁"
+    tier: 2
+    hook: WATER
+    params: {save-chance: 40}
+  huajiao:
+    display: "化蛟"
+    tier: 3
+    hook: WATER
+    params: {save-chance: 60}
+  bieqi:
+    display: "憋气"
+    tier: 1
+    hook: WATER
+    params: {max-air-bonus: 60}
+  shenqian:
+    display: "深潜"
+    tier: 2
+    hook: WATER
+    params: {max-air-bonus: 100}
+  zhumu:
+    display: "珠母"
+    tier: 3
+    hook: WATER
+    params: {max-air-bonus: 200, save-chance: 20}
+
+# ===== KILL（击杀，6 条）=====
+  liehun:
+    display: "猎魂"
+    tier: 1
+    hook: KILL
+    params: {heal: 1.0}
+  yinxue:
+    display: "饮血"
+    tier: 2
+    hook: KILL
+    params: {heal: 2.0}
+  taotie:
+    display: "饕餮"
+    tier: 3
+    hook: KILL
+    params: {heal: 3.0, food: 2}
+  zhanyi:
+    display: "战意"
+    tier: 2
+    hook: KILL
+    params: {potion: strength, amplifier: 1, duration-seconds: 5}
+  jifeng:
+    display: "疾风"
+    tier: 1
+    hook: KILL
+    params: {potion: SPEED, amplifier: 1, duration-seconds: 5}
+  weiya:
+    display: "威压"
+    tier: 3
+    hook: KILL
+    params: {potion: resistance, amplifier: 1, duration-seconds: 4}
+
+# ===== PASSIVE（常驻灵光，6 条）=====
+  qingshen:
+    display: "轻身"
+    tier: 1
+    hook: PASSIVE
+    params: {potion: SPEED, amplifier: 0}
+  shenxing:
+    display: "神行"
+    tier: 2
+    hook: PASSIVE
+    params: {potion: SPEED, amplifier: 1}
+  shengxi:
+    display: "生息"
+    tier: 1
+    hook: PASSIVE
+    params: {heal: 0.25}
+  cuiti:
+    display: "淬体"
+    tier: 2
+    hook: PASSIVE
+    params: {heal: 0.5}
+  mingmu:
+    display: "明目"
+    tier: 1
+    hook: PASSIVE
+    params: {potion: NIGHT_VISION, amplifier: 0}
+  shifu:
+    display: "石肤"
+    tier: 3
+    hook: PASSIVE
+    params: {absorption: 1.0, every: 4}

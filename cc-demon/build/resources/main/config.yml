@@ -1,0 +1,193 @@
+# ============================================================
+#  ChiliCraft 夜晚饿魔配置（cc-demon）
+#
+#  * 全部数值可调；/cc reload（或 /demon reload）后即时生效
+#  * 刷怪强度额外乘以核心模式参数 MOB_SPAWN_RATE
+#    （adventure = 1.0；cozy = 0.3，刷怪大幅减少）
+#  * 文本均为 MiniMessage 格式
+# ============================================================
+
+# ---------- 夜间判定（原版时间刻）：与 cc-survival 保持一致 ----------
+night-start: 13042
+night-end: 23458
+
+# ---------- 刷怪 ----------
+spawn:
+  enabled: true
+  # 生成判定间隔（秒）：夜间每玩家周期判定一次
+  interval: 30
+  # 生成点与玩家的距离范围（格）：太近会当面刷出，太远追不上
+  radius-min: 24
+  radius-max: 48
+  # 每玩家周围允许的饿魔数量上限（含该玩家触发生成的一切类型）
+  max-per-player: 12
+  # 全服饿魔数量上限（性能红线：硬上限，防止刷怪失控）
+  global-limit: 80
+  # 巡演联动：排除世界名单（方街安全区）——名单内世界不刷饿魔，饿魔也不索敌；
+  # cc-street 发布 street.world_enter 时主类会额外清除入街玩家周围的存量饿魔
+  excluded-worlds: [world_street]
+  # 小饿魔：成群生成数量
+  imp:
+    group-min: 3
+    group-max: 6
+  # 本次判定附带生成猎手的概率（0-1）
+  hunter-chance: 0.35
+  # 本次判定附带生成母体的概率（0-1）
+  mother-chance: 0.05
+
+# ---------- 饿意追踪 ----------
+hunger:
+  enabled: true
+  # 饱食度低于此值触发饿意追踪（规格值 6）
+  threshold: 6
+  # 追踪半径（格，规格值 48）
+  radius: 48
+  # 追击移速加成（规格值 0.30 = +30%）
+  speed-boost: 0.30
+
+# ---------- 母体 ----------
+mother:
+  # 召唤间隔（秒，规格值 10）
+  summon-interval: 10
+  # 每次召唤小饿魔数量范围
+  summon-min: 1
+  summon-max: 2
+  # 每只母体存活召唤物上限（小饿魔计数）
+  max-summons: 8
+
+# ---------- 白天清除 ----------
+daytime:
+  # 白天周期清除全部饿魔（防止残留到日出）
+  clear: true
+
+# ---------- 掉落 ----------
+drops:
+  # 饿魔之牙：稳定掉落（兑换材料）
+  fang:
+    material: SLIME_BALL
+    min: 1
+    max: 2
+  # 饱腹之魂：概率掉落（右键恢复 100% 饱食度）
+  soul:
+    material: GHAST_TEAR
+    chance: 0.15
+
+# ---------- 属性（原版生物改属性 + 改名，不重写 AI） ----------
+attributes:
+  imp:
+    health: 12.0    # 规格值 12
+    damage: 4.0     # 规格值 4
+  hunter:
+    health: 24.0    # 规格值 24
+    damage: 7.0     # 规格值 7
+  mother:
+    health: 200.0   # 规格值 200
+    damage: 12.0    # 规格值 12
+
+# ---------- MythicMobs 接管（可选，规格 v1.1） ----------
+# 安装 MythicMobs 且开关开启时，下方配置了 MM 内部 ID 的饿魔类型改由 MM 生成：
+# 技能、行为与展示名全部按 MM 侧 mob 配置执行（建议仍用原版生物模型）；
+# 未配置 ID 的类型、MM 缺失或生成失败时，一律回退上方「属性改造」路径。
+# 无论走哪条路径，击杀掉落 / demon.mob_killed 事件 / 白天清除 / 安全区联动行为不变。
+integration:
+  mythicmobs: false
+mythic:
+  types:
+    # imp: hungry_imp          # MM 内部 ID；注释掉即该类型不走 MM
+    # hunter: hungry_hunter
+    # mother: hungry_mother
+
+# ---------- 消息模板（MiniMessage） ----------
+messages:
+  gui-title-status: "<dark_red>饿魔状态"
+  gui-status-name: "<red>饿魔状态"
+  gui-status-total: "<gray>存活：<count> / <limit></gray>"
+  gui-status-imp: "<gray>小饿魔：<count></gray>"
+  gui-status-hunter: "<gray>猎手：<count></gray>"
+  gui-status-mother: "<gray>母体：<count></gray>"
+  gui-status-spawn: "<gray>自动刷怪：<state></gray>"
+  gui-status-time: "<gray>当前世界：<time></gray>"
+  help: "<gray>使用 /cc demon status 查看饿魔状态；管理员可用 /cc demon admin。</gray>"
+  imp-name: "<red>小饿魔</red>"
+  hunter-name: "<red>饿意猎手</red>"
+  mother-name: "<dark_red>饿魔母体</dark_red>"
+  fang-name: "<yellow>饿魔之牙</yellow>"
+  fang-lore: "<gray>击杀饿魔获得，可在商贩处兑换物资</gray>"
+  soul-name: "<gold>饱腹之魂</gold>"
+  soul-lore: "<gray>右键食用：瞬间恢复全部饱食度</gray>"
+  soul-restored: "<green>饥肠辘辘的感觉消失了。</green>"
+
+  # —— GUI 通用（键名平铺 kebab-case：DemonSettings 浅键加载，禁止嵌套小节） ——
+  gui-title-main: "<dark_red>饿魔管理"
+  gui-title-config: "<dark_red>饿魔参数"
+  gui-close: "<red>关闭"
+  gui-back: "<yellow>返回"
+  gui-state-on: "<green>开"
+  gui-state-off: "<red>关"
+  gui-night-yes: "<dark_purple>夜晚"
+  gui-night-no: "<yellow>白天"
+
+  # —— GUI 主面板（/demon 或 /demon menu） ——
+  gui-main-status-name: "<red>饿魔总览"
+  gui-main-status-lore-total: "<gray>当前总数：<total> / <limit></gray>"
+  gui-main-status-lore-imp: "<gray>小饿魔：<imp></gray>"
+  gui-main-status-lore-hunter: "<gray>饿意猎手：<hunter></gray>"
+  gui-main-status-lore-mother: "<gray>饿魔母体：<mother></gray>"
+  gui-main-status-lore-spawn: "<gray>自动刷怪：<state></gray>"
+  gui-main-status-lore-time: "<gray>当前世界：<time></gray>"
+  gui-main-spawn-name: "<red>生成：<type></red>"
+  gui-main-spawn-lore-entity: "<gray>底座：<entity></gray>"
+  gui-main-spawn-lore-stats: "<gray>生命：<health> / 攻击：<damage></gray>"
+  gui-main-spawn-lore-mythic: "<gray>生成路径：MythicMobs（<id>）</gray>"
+  gui-main-spawn-lore-vanilla: "<gray>生成路径：原版属性改造</gray>"
+  gui-main-spawn-lore-click: "<yellow>点击在面前生成</yellow>"
+  gui-main-clear-name: "<red>清除全部饿魔"
+  gui-main-clear-lore-count: "<gray>将清除：<count> 只</gray>"
+  gui-main-clear-lore-click: "<yellow>点击清除全部存活饿魔</yellow>"
+  gui-main-config-name: "<gold>参数总览"
+  gui-main-config-lore: "<gray>查看刷怪 / 掉落 / MythicMobs 等当前配置</gray>"
+
+  # —— GUI 参数总览子面板（只读展示当前生效配置） ——
+  gui-config-info-name: "<gold>参数总览"
+  gui-config-info-lore: "<gray>以下为当前生效配置；/demon reload 后重开面板即见新值</gray>"
+  gui-config-night-name: "<gold>夜间判定"
+  gui-config-night-lore-range: "<gray>夜间区间：<start> ~ <end>（时间刻）</gray>"
+  gui-config-night-lore-now: "<gray>当前世界：<time></gray>"
+  gui-config-spawn-name: "<gold>刷怪参数"
+  gui-config-spawn-lore-interval: "<gray>刷新间隔：<interval> 秒</gray>"
+  gui-config-spawn-lore-radius: "<gray>搜索半径：<min> ~ <max> 格</gray>"
+  gui-config-spawn-lore-limit: "<gray>上限：单玩家 <player> / 全服 <global></gray>"
+  gui-config-group-name: "<gold>群组与概率"
+  gui-config-group-lore-imp: "<gray>小饿魔群：<min> ~ <max> 只</gray>"
+  gui-config-group-lore-chance: "<gray>概率：猎手 <hunter>% / 母体 <mother>%</gray>"
+  gui-config-hunger-name: "<gold>饿意追踪"
+  gui-config-hunger-lore-state: "<gray>饿意追踪：<state></gray>"
+  gui-config-hunger-lore-threshold: "<gray>触发：饥饿 <threshold> / 半径 <radius> 格</gray>"
+  gui-config-hunger-lore-boost: "<gray>追击加速：+<boost>%</gray>"
+  gui-config-mother-name: "<gold>母体召唤"
+  gui-config-mother-lore-interval: "<gray>每 <interval> 秒召唤 <min> ~ <max> 只</gray>"
+  gui-config-mother-lore-limit: "<gray>单只母体召唤上限：<limit></gray>"
+  gui-config-daytime-name: "<gold>白天清除"
+  gui-config-daytime-lore: "<gray>天亮自动清除存活饿魔：<state></gray>"
+  gui-config-drops-name: "<gold>击杀掉落"
+  gui-config-drops-lore-fang: "<gray>爪牙掉落：<material> × <min> ~ <max></gray>"
+  gui-config-drops-lore-soul: "<gray>灵魂掉落：<material>（<chance>% 概率）</gray>"
+  gui-config-mythic-name: "<gold>MythicMobs"
+  gui-config-mythic-lore-state: "<gray>MythicMobs 接管：<state></gray>"
+  gui-config-mythic-lore-imp: "<gray>小饿魔：<path></gray>"
+  gui-config-mythic-lore-hunter: "<gray>饿意猎手：<path></gray>"
+  gui-config-mythic-lore-mother: "<gray>饿魔母体：<path></gray>"
+  gui-mythic-path-mm: "<yellow>MythicMobs：<id></yellow>"
+  gui-mythic-path-vanilla: "<gray>原版属性改造</gray>"
+
+# ---------- 命令反馈 ----------
+feedback:
+  status-line: "<gold>饿魔状态：</gold><newline>存活 <count> 只（小饿魔 <imp> / 猎手 <hunter> / 母体 <mother>）"
+  cleared: "<green>已清除 <count> 只饿魔。</green>"
+  spawned: "<green>已在你的面前生成 <type>。</green>"
+  reloaded: "<green>cc-demon 配置已重载。</green>"
+  spawn-usage: "<red>用法：/demon spawn <imp|hunter|mother></red>"
+  no-permission: "<red>你没有权限执行此命令。</red>"
+  usage: "<yellow>用法：/cc demon [menu|status|admin|clear|spawn|reload]</yellow>"
+  players-only: "<red>该子命令只能由玩家执行。</red>"
+  world-full: "<red>全服饿魔已达上限，生成被跳过。</red>"

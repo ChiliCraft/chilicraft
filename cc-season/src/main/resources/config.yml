@@ -1,0 +1,72 @@
+# cc-season 默认配置（所有周期与数值均可热重载）
+calendar:
+  days-per-season: 28
+  real-time-minutes-per-day: 0
+  follow-overworld-time: false
+  advance-on-sleep: true
+  require-players: true
+  max-catchup: 2
+  overworld: world
+  start-year: 1
+  start-day: 1
+  start-season: spring
+weather:
+  enabled: true
+  check-seconds: 60
+  # 不接管这些世界的天气，避免影响独立玩法世界。
+  disabled-worlds: []
+  seasons:
+    spring: {clear: 0.65, rain: 0.30, thunder: 0.05}
+    summer: {clear: 0.80, rain: 0.15, thunder: 0.05}
+    autumn: {clear: 0.55, rain: 0.35, thunder: 0.10}
+    winter: {clear: 0.45, rain: 0.45, thunder: 0.10}
+hud:
+  enabled: true
+  # 支持 MiniMessage；三个百分号变量在显示前替换。
+  title: "<gold>第%year%年 · %season% · 第%day%天</gold>"
+  # 可用值：PINK、YELLOW、RED、BLUE、GREEN、PURPLE、WHITE。
+  colors:
+    spring: PINK
+    summer: YELLOW
+    autumn: RED
+    winter: BLUE
+visual:
+  enabled: true
+  resend-on-season-change: true
+  # 换季刷新每 tick 最多处理的区块数，避免一次性刷新阻塞主线程。
+  refresh-batch-size: 64
+  disabled-worlds: []
+  # 每季映射为客户端显示的 biome；实际世界 biome 不会改变。
+  mappings:
+    spring: PLAINS
+    summer: JUNGLE
+    autumn: WINDSWEPT_FOREST
+    winter: SNOWY_PLAINS
+migration:
+  # 仅在名单世界出生点水平半径内扫描，并在主线程安全传送名单动物。
+  enabled: true
+  # 全局配置热载会取消旧任务，并按新周期重建单一迁徙任务。
+  period-seconds: 300
+  radius: 32
+  max-entities: 24
+  # 每次迁徙的随机水平位移范围（方块）。
+  min-distance: 8
+  max-distance: 16
+  worlds: [world]
+  animals: [COW, SHEEP, PIG, CHICKEN]
+villagers:
+  # 村民生成时按当前季节设置外观类型；visual.disabled-worlds 同时作为禁用世界名单。
+  enabled: true
+# 键格式为「年份-季内日」，值为 season.special_day 的 target 联动标识。
+special-days: {}
+messages:
+  menu-title: "季节菜单"
+  command:
+    permission: "你没有使用季节命令的权限。"
+    usage: "用法：/ccseason [menu|info|hud|guide|clock|set]"
+    help: "季节：查看状态、切换 HUD、获取指南与时钟。"
+  guide-title: "季节指南"
+  # 每项为指南书的一页，支持 MiniMessage；空列表时生成无正文的指南书。
+  guide-lines:
+    - "<gold>季节指南</gold>"
+    - "<gray>春夏秋冬随日历轮转。</gray>"

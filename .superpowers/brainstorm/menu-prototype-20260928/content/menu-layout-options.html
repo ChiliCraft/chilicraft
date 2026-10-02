@@ -1,0 +1,63 @@
+<h2>ChiliCraft 统一主菜单布局</h2>
+<p class="subtitle">请选择更符合服务器使用习惯的布局方向。点击卡片即可选择；推荐 B。</p>
+
+<style>
+.mc-inventory{background:#c6c6c6;border:4px solid #373737;border-radius:4px;padding:10px;box-shadow:inset 3px 3px #fff,inset -3px -3px #555;font-family:system-ui,sans-serif}
+.mc-title{background:#222;color:#fff;padding:8px 10px;margin:-10px -10px 10px;font-weight:700;letter-spacing:.5px}
+.mc-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+.slot{aspect-ratio:1;background:#8b8b8b;border:2px solid;border-color:#373737 #fff #fff #373737;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:#fff;line-height:1.15;padding:2px;box-sizing:border-box}
+.profile{background:#5d8fba}.mode{background:#7a6c9d}.play{background:#4d8c57}.system{background:#ad7d3d}.future{background:#686868;color:#ccc}.close{background:#9c4545}.nav{background:#47758f}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:12px}.dot{width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px}
+.card-image{padding:8px;background:#111}
+</style>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mc-inventory">
+        <div class="mc-title">ChiliCraft · 全部功能</div>
+        <div class="mc-grid">
+          <div class="slot profile">档案</div><div class="slot mode">模式</div><div class="slot play">生存</div><div class="slot play">灵魂</div><div class="slot play">武学</div><div class="slot play">冒险</div><div class="slot play">季节</div><div class="slot play">恶魔</div><div class="slot future">街区</div>
+          <div class="slot system">家园</div><div class="slot system">余额</div><div class="slot future">任务</div><div class="slot future">活动</div><div class="slot future">经济</div><div class="slot future">休闲</div><div class="slot"></div><div class="slot"></div><div class="slot close">关闭</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot nav">帮助</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><h3>A · 单页总览</h3><p>所有模块和常用操作放在一个 27 格菜单中。入口最直接，但模块继续增加后容易拥挤。</p></div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mc-inventory">
+        <div class="mc-title">ChiliCraft · 主菜单</div>
+        <div class="mc-grid">
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot profile">我的档案</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot play">生存冒险</div><div class="slot play">成长体系</div><div class="slot play">世界生态</div><div class="slot mode">模式切换</div><div class="slot system">社交生活</div><div class="slot system">经济服务</div><div class="slot future">巡演方街</div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot system">家园</div><div class="slot nav">帮助中心</div><div class="slot system">灵魂余额</div><div class="slot"></div><div class="slot"></div><div class="slot close">关闭</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><h3>B · 分类导航（推荐）</h3><p>主菜单只展示清晰分类；点击后进入模块列表。能容纳现有 7 个模块和后续 5 个规划模块。</p></div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mc-inventory">
+        <div class="mc-title">ChiliCraft · 个性化首页</div>
+        <div class="mc-grid">
+          <div class="slot"></div><div class="slot"></div><div class="slot profile">档案</div><div class="slot profile">当前季节</div><div class="slot profile">灵魂余额</div><div class="slot profile">武学境界</div><div class="slot profile">冒险队伍</div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot play">最近使用</div><div class="slot play">最近使用</div><div class="slot play">推荐入口</div><div class="slot mode">模式切换</div><div class="slot play">推荐入口</div><div class="slot play">最近使用</div><div class="slot play">最近使用</div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot system">全部功能</div><div class="slot system">家园</div><div class="slot nav">帮助</div><div class="slot system">设置</div><div class="slot system">管理</div><div class="slot"></div><div class="slot close">关闭</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body"><h3>C · 个性化仪表盘</h3><p>首页展示实时状态与最近使用入口，体验丰富，但需要更多跨模块状态接口和持久化。</p></div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><i class="dot" style="background:#5d8fba"></i>玩家状态</span>
+  <span><i class="dot" style="background:#4d8c57"></i>玩法入口</span>
+  <span><i class="dot" style="background:#ad7d3d"></i>服务功能</span>
+  <span><i class="dot" style="background:#686868"></i>规划/未安装</span>
+</div>

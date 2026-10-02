@@ -1,0 +1,24 @@
+name: cc-season
+version: "${version}"
+main: com.chilicraft.season.ChiliSeasonPlugin
+api-version: "1.21"
+authors: [ChiliCraft]
+description: 季节日历、天气、农耕与生态
+
+depend: [cc-core]
+softdepend: [PlaceholderAPI, ProtocolLib]
+commands:
+  ccseason:
+    description: 查看与管理季节日历
+    usage: /ccseason [menu|info|hud|guide|clock|set]
+    aliases: [season]
+permissions:
+  chilicraft.season.use:
+    description: 允许使用季节命令
+    default: true
+  chilicraft.season.admin:
+    description: 管理季节日历
+    default: op
+  ccseason.admin:
+    description: 兼容旧季节管理权限
+    default: op

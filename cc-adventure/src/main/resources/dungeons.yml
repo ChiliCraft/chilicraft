@@ -1,0 +1,127 @@
+# ============================================================
+# cc-adventure · 地城定义（10 个，5 种机制 × 2）
+# 修改后由 /cc reload 热载（DungeonContent 整体重建注册表）
+#
+# 机制说明：
+#   GUARD_CAULDRON 守锅：波次刷怪，怪物贴锅扣耐久，清光全波=通关，锅碎=失败
+#   SACRIFICE      献祭：手持名单物品右键祭坛，达到目标数=通关
+#   BEAR_WEIGHT    承重：桥面逐排塌陷，任一队员踩到终点金块=通关，坠落回入口
+#   UNDERWATER     水下：房间灌水，波次刷怪（发放水下呼吸），清光全波=通关
+#   DUAL_REALM     双界：两名队员分别右键界门甲/乙，双门齐亮=通关
+#
+# template 为空 = 程序生成封闭房间；填写后优先放置
+# plugins/cc-adventure/structures/<template>.nbt（缺失自动回退程序生成）。
+# ============================================================
+
+dungeons:
+
+  # ---------- 守锅 ----------
+  canteen_night:
+    display: 深夜食堂·守锅夜
+    mechanic: GUARD_CAULDRON
+    template: ""
+    size: { x: 41, y: 12, z: 41 }
+    waves: 3
+    wave-size: 4
+    mob: ZOMBIE
+    time-limit-seconds: 600
+    reward-soul: 20
+    enabled: true
+
+  stove_garden:
+    display: 新春游园·灶台守卫
+    mechanic: GUARD_CAULDRON
+    template: ""
+    size: { x: 45, y: 12, z: 45 }
+    waves: 4
+    wave-size: 5
+    mob: HUSK
+    time-limit-seconds: 600
+    reward-soul: 30
+    enabled: true
+
+  # ---------- 献祭 ----------
+  soul_altar:
+    display: 不安灵魂祭坛
+    mechanic: SACRIFICE
+    template: ""
+    size: { x: 33, y: 12, z: 33 }
+    offer-target: 10
+    offer-items: [ ROTTEN_FLESH, BONE, STRING ]
+    time-limit-seconds: 480
+    reward-soul: 25
+    enabled: true
+
+  glasses_funeral:
+    display: 眼镜的葬礼
+    mechanic: SACRIFICE
+    template: ""
+    size: { x: 33, y: 12, z: 33 }
+    offer-target: 8
+    offer-items: [ GLASS_BOTTLE, SPIDER_EYE, INK_SAC ]
+    time-limit-seconds: 480
+    reward-soul: 25
+    enabled: true
+
+  # ---------- 承重 ----------
+  plank_bridge:
+    display: 承重独木桥
+    mechanic: BEAR_WEIGHT
+    template: ""
+    size: { x: 21, y: 12, z: 41 }
+    time-limit-seconds: 300
+    reward-soul: 25
+    enabled: true
+
+  mountain_road:
+    display: 山遥路远·负重栈道
+    mechanic: BEAR_WEIGHT
+    template: ""
+    size: { x: 25, y: 14, z: 61 }
+    time-limit-seconds: 360
+    reward-soul: 30
+    enabled: true
+
+  # ---------- 水下 ----------
+  water_gallery:
+    display: 水做的回廊
+    mechanic: UNDERWATER
+    template: ""
+    size: { x: 35, y: 14, z: 35 }
+    waves: 3
+    wave-size: 3
+    mob: DROWNED
+    time-limit-seconds: 600
+    reward-soul: 30
+    enabled: true
+
+  deepsea_postbox:
+    display: 深海信箱
+    mechanic: UNDERWATER
+    template: ""
+    size: { x: 39, y: 16, z: 39 }
+    waves: 4
+    wave-size: 4
+    mob: DROWNED
+    time-limit-seconds: 660
+    reward-soul: 40
+    enabled: true
+
+  # ---------- 双界 ----------
+  halfdream_gate:
+    display: 半梦界隙
+    mechanic: DUAL_REALM
+    template: ""
+    size: { x: 41, y: 12, z: 41 }
+    time-limit-seconds: 420
+    reward-soul: 35
+    enabled: true
+
+  mirror_alley:
+    display: 方街·镜面巷口
+    mechanic: DUAL_REALM
+    template: ""
+    size: { x: 45, y: 12, z: 45 }
+    time-limit-seconds: 420
+    reward-soul: 35
+    enabled: true

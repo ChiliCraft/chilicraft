@@ -1,0 +1,244 @@
+# ============================================================
+# cc-martial 配置（数值与开关）
+# 流派 / 技能 / 词缀等「内容定义」在 skills.yml（数据驱动，可整包替换）
+# ============================================================
+
+# ---------- 境界（6 层：凡人 0 → 破天下 5） ----------
+realms:
+  # 各境界显示名（索引 0-5 对应凡人/拙劲/素青纱/铜钱挂/绣花蹄/破天下）
+  display:
+    - "凡人"
+    - "拙劲"
+    - "素青纱"
+    - "铜钱挂"
+    - "绣花蹄"
+    - "破天下"
+  unlock:
+    # 拙劲(1)：累计击杀生物数
+    kill-threshold: 50
+    # 素青纱(2)：通关地城次数（订阅 adventure.dungeon_clear）
+    dungeon-clears: 1
+    # 铜钱挂(3)：击杀 Boss 次数（订阅 adventure.boss_killed）
+    boss-kills: 1
+    # 绣花蹄(4)：完成擂台次数（martial.arena_win）
+    arena-wins: 1
+    # 破天下(5)：击败下列 id 之一的世界 Boss（订阅 adventure.boss_killed，
+    # target 命中即达成；cc-adventure 未实装时事件不会到达，条件自然悬置）
+    world-boss-ids:
+      - "nightmare"
+  # 每境界可装备的主动技能槽数（索引=境界）
+  skill-slots: [2, 3, 4, 4, 5, 5]
+  # 每境界叠加加成（索引=境界，百分比为 0-100）
+  bonuses:
+    # 近战伤害加成（%）
+    melee-damage-pct: [0, 5, 10, 15, 20, 30]
+    # 受击减伤（%）
+    damage-reduction-pct: [0, 0, 3, 6, 10, 15]
+    # 额外最大生命（半心=1）
+    max-health-bonus: [0, 0, 0, 2, 4, 6]
+
+# ---------- 每日擂台 ----------
+arena:
+  enabled: true
+  # 每日开擂时刻（服务器本地时间），报名窗口 = 开擂前 signup-minutes 分钟
+  times: ["20:00", "22:00"]
+  signup-minutes: 15
+  # 擂台区域（自定义区域检查，不依赖 WorldGuard）
+  world: "world"
+  center-x: 0
+  center-z: 0
+  radius: 16
+  # 冠军奖励
+  champion-souls: 5000
+  # Vault 金钱加成（联动未启用或为 0 时跳过）
+  champion-money: 0.0
+  # 巡演联动：败者安慰礼（「下等马」），每场败者获赠灵魂，0=关闭
+  loser-consolation-souls: 100
+  # 巡演联动：夺冠「演」演出（冠军标题 + 全服音效）
+  champion-show: true
+  # 擂台内允许施展武学技能（装备仍统一铁套铁剑）
+  allow-skills: true
+  # 统一装备（arena.kit 段：材质名；armor 依次=头/胸/腿/脚）
+  kit:
+    armor: [IRON_HELMET, IRON_CHESTPLATE, IRON_LEGGINGS, IRON_BOOTS]
+    weapon: IRON_SWORD
+
+# ---------- 技能通用 ----------
+skills:
+  # 武学手册材质：右键施展当前选中技能，潜行+右键切换已装备技能
+  handbook-material: BOOK
+  # 全局公共冷却（秒），叠加在各技能独立冷却之上
+  global-cooldown: 1.0
+  # 武学经验来源（分配给全部已习得技能，独立升级）
+  xp-kill: 2
+  xp-boss: 10
+  xp-dungeon: 25
+  # 技能升级所需经验表（索引=等级-1；最大等级 = 表长度）
+  passive-xp-curve: [10, 25, 50, 90, 140]
+
+# ---------- 词缀 ----------
+affixes:
+  # 击杀掉落武器/工具时随机施加词缀概率（%，0=关闭）
+  drop-roll-chance: 5.0
+  # 每件物品最多词缀数
+  max-per-item: 1
+
+# ---------- 外部联动（插件在场且此处开启才生效，缺失自动降级） ----------
+integration:
+  # MythicMobs：流派武品发放与技能特效托管（skills.yml 内 mythic-* 键）
+  mythicmobs: true
+  # PlaceholderAPI：%chilimartial_* 变量
+  placeholders: true
+  # Vault：擂台冠军金钱加成
+  vault: true
+
+# ---------- 消息模板（MiniMessage） ----------
+messages:
+  prefix: "<gray>[武学] </gray>"
+  # 境界
+  realm-up: "<gold>武学境界提升：<yellow><old_realm></yellow> → <bold><new_realm></bold></gold>"
+  realm-bonus: "<gray>·境界加成：伤害 +<dmg>%，减伤 <red>%，生命 +<hp></gray>"
+  realm-max: "<gray>你已臻武学极致。</gray>"
+  # 流派与技能
+  school-joined: "<green>已拜入流派：<bold><school></bold></green>"
+  school-switch-denied: "<red>已拜入门派不可随意更改，转派需重置境界（/martial admin resetschool）。</red>"
+  school-unknown: "<red>未知流派：<school></red>"
+  school-need-join: "<red>你尚未拜入流派（/martial school list 查看可拜流派）。</red>"
+  school-current: "<gray>当前流派：<aqua><school></aqua></gray>"
+  school-list-header: "<gold>可拜流派（拜入后不可转派）：</gold>"
+  school-entry: "<dark_gray>·</dark_gray> <aqua><id></aqua> <gray><display> —— /martial school join <id></gray>"
+  school-reset: "<green>已重置 <player> 的流派归属与全部技能进度。</green>"
+  handbook-received: "<green>已获得<gray>「武学手册」</gray>：右键施展、潜行+右键切换技能。</green>"
+  handbook-admin-given: "<green>已为 <player> 补发武学手册。</green>"
+  skill-learned: "<green>已领悟技能 <bold><skill></bold>（Lv.<level>）。</green>"
+  skill-already-learned: "<gray>你已领悟该技能。</gray>"
+  skill-wrong-school: "<red>该技能不属于你的流派。</red>"
+  skill-need-realm: "<red>领悟该技能需达到境界：<yellow><realm></yellow></red>"
+  skill-unknown: "<red>未知技能：<skill></red>"
+  skill-already-equipped: "<gray>该技能已在装备槽中。</gray>"
+  skill-equip: "<green>已装备技能 <skill>（槽位 <slot>/<slots>）。</green>"
+  skill-unequip: "<gray>已卸下技能 <skill>。</gray>"
+  skill-slots-full: "<red>技能槽已满（<slots> 格），先卸下一个技能。</red>"
+  skill-locked: "<red>尚未领悟该技能。</red>"
+  skill-passive-hint: "<gray>被动技能无需装备或选中，习得后自动生效。</gray>"
+  skill-not-equipped: "<gray>该技能未在装备槽中。</gray>"
+  skill-need-equip: "<red>「<skill>」尚未装备，先 /martial skills equip <skill>。</red>"
+  skill-selected: "<green>已选定施展技能：<bold><skill></bold>（右键手册施展）。</green>"
+  skill-level-up: "<gold>「<skill>」升至 Lv.<level>！</gold>"
+  skill-cooldown: "<yellow>「<skill>」尚在冷却（<left> 秒）。</yellow>"
+  skill-cast: "<aqua>施展「<skill>」！</aqua>"
+  skill-not-active: "<red>当前未装备任何主动技能。</red>"
+  # 面板与列表
+  menu-header: "<gold><bold>===== 武学面板 =====</bold></gold>"
+  menu-realm: "<gray>境界：<yellow><realm></yellow>（累计击杀 <kills>）</gray>"
+  menu-school: "<gray>流派：<aqua><school></aqua></gray>"
+  menu-school-none: "<gray>流派：未拜师（/martial school list 查看流派）</gray>"
+  menu-skills: "<gray>已习得 <count> 门技能 · 当前施展：<selected></gray>"
+  skills-header: "<gold>「<school>」技能（learn/equip/select <id>）：</gold>"
+  skill-entry: "<state> <white><display></white> <gray><detail></gray>"
+  skill-state-selected: "<green>◆选中</green>"
+  skill-state-equipped: "<dark_green>◆已装备</dark_green>"
+  skill-state-learned: "<yellow>◇已学</yellow>"
+  skill-state-learnable: "<aqua>◇可学</aqua>"
+  skill-state-locked: "<gray>◇未达</gray>"
+  admin-usage: "<gray>用法：/martial admin resetschool <玩家> | /martial admin handbook <玩家> | /martial admin affix <玩家> [词缀id] | /martial reload</gray>"
+  # 擂台
+  arena-announce: "<gold>擂台开启：<yellow><time></yellow> 正式开打，/martial arena join 报名（剩余 <left> 秒）。</gold>"
+  arena-start: "<gold>擂台开始！本日 <count> 人参战，捉对厮杀，最后的胜者为擂台冠军！</gold>"
+  arena-match: "<yellow><a> vs <b> —— 战斗开始！</yellow>"
+  arena-win-match: "<green><winner> 击败 <loser>，晋级下一轮！</green>"
+  arena-champion: "<gold>本日擂台冠军：<bold><champion></bold>！奖励 <souls> 灵魂。</gold>"
+  # 巡演联动：败者安慰礼
+  arena-loser-consolation: "<gray>虽败犹荣（下等马），获赠 <yellow><souls></yellow> 灵魂安慰礼。</gray>"
+  arena-joined: "<green>已报名擂台（当前 <count> 人）。</green>"
+  arena-quit: "<gray>已取消擂台报名。</gray>"
+  arena-eliminated: "<red>你在擂台中落败，观战吧。</red>"
+  arena-not-open: "<red>擂台未开放（每日 <times> 开打）。</red>"
+  arena-cancelled: "<gray>报名人数不足，本日擂台取消。</gray>"
+  arena-teleport: "<gray>比赛即将开始，已传送你进入擂台。</gray>"
+  arena-kit: "<gray>已统一装备：铁套铁剑（赛后归还随身物品）。</gray>"
+  arena-skills-blocked: "<red>擂台规则禁止施展武学技能！</red>"
+  arena-already: "<gray>你已报名本日擂台。</gray>"
+  arena-not-joined: "<gray>你尚未报名擂台。</gray>"
+  arena-status-header: "<gold><bold>===== 每日擂台 =====</bold></gold>"
+  arena-status-idle: "<gray>当前未开放报名。每日 <times> 开打（开打前 <signup> 分钟开放报名）。</gray>"
+  arena-status-signup: "<gold>报名中！开打剩余 <seconds> 秒，已报名 <count> 人。</gold>"
+  arena-status-running: "<gold>比赛进行中：待战 <count> 人，当前对局 <fight>。</gold>"
+  arena-status-reward: "<gray>冠军奖励：<yellow><souls></yellow> 灵魂<extra>。</gray>"
+  # 词缀
+  affix-applied: "<green>物品获得词缀：<bold><affix></bold>！</green>"
+  affix-admin-applied: "<green>已为 <player> 主手物品施加词缀 <affix>。</green>"
+  affix-none: "<red>主手物品不支持词缀。</red>"
+  affix-unknown: "<red>词缀 <id> 不存在。</red>"
+  affix-full: "<red>物品词缀已达上限（<max> 条）。</red>"
+  # 统一入口与反馈
+  usage: "<gray>用法：/martial <menu|school|skills|arena></gray>"
+  players-only: "<red>该命令仅玩家可用。</red>"
+  no-permission: "<red>权限不足。</red>"
+  player-not-found: "<red>玩家不在线：<player></red>"
+  reloaded: "<green>cc-martial 配置已重载。</green>"
+
+  # GUI 面板（/martial 无参打开；占位符在代码中替换，键平铺非嵌套）
+  gui-title-main: "<dark_gray>武学菜单"
+  gui-title-school: "<dark_gray>流派"
+  gui-title-skills: "<dark_gray>技能"
+  gui-title-arena: "<dark_gray>每日擂台"
+  gui-close: "<red>关闭"
+  gui-back: "<gray>返回"
+  # 主面板
+  gui-main-status-name: "<aqua>我的武学"
+  gui-main-status-realm: "<gray>境界：<yellow><realm></yellow>"
+  gui-main-status-bonus: "<gray>伤害 +<dmg>% · 减伤 <dr>% · 生命 +<hp></gray>"
+  gui-main-status-progress: "<gray>击杀 <kills> · 地城 <dungeons> · Boss <bosses> · 擂台 <arena></gray>"
+  gui-main-status-next: "<gray>下一境界：<yellow><next></yellow>（<progress>）</gray>"
+  gui-main-status-max: "<gold>已臻武学极致"
+  gui-main-school-name: "<gold>流派"
+  gui-main-school-lore-joined: "<gray>当前流派：<white><school></gray>"
+  gui-main-school-lore-none: "<gray>尚未拜师，点击选择流派"
+  gui-main-skills-name: "<gold>技能"
+  gui-main-skills-lore: "<gray>已学 <count> 门 · 施展：<selected></gray>"
+  gui-main-skills-lore-none: "<gray>拜入流派后可领悟技能"
+  gui-main-arena-name: "<gold>每日擂台"
+  gui-main-arena-lore: "<gray>报名、规则与冠军奖励"
+  gui-main-handbook-name: "<gold>武学手册"
+  gui-main-handbook-lore-have: "<gray>右键施展 · 潜行+右键切换"
+  gui-main-handbook-lore-claim: "<yellow>手册遗失？点击补领"
+  gui-main-handbook-lore-locked: "<gray>拜入流派后获得"
+  # 流派面板
+  gui-school-status-name: "<aqua>流派"
+  gui-school-status-current: "<gray>当前流派：<white><school></gray>"
+  gui-school-status-none: "<gray>尚未拜师"
+  gui-school-lore-skills: "<dark_gray>· <skills> <gray>需<realm></gray>"
+  gui-school-lore-join: "<yellow>点击拜入此流派"
+  gui-school-lore-current: "<green>◆当前流派"
+  gui-school-lore-denied: "<gray>已拜师，转派需管理员重置"
+  # 技能面板
+  gui-skills-status-name: "<aqua>技能"
+  gui-skills-status-lore: "<gray>流派：<school> · 槽位 <used>/<slots></gray>"
+  gui-skills-status-selected: "<gray>当前施展：<selected></gray>"
+  gui-skills-status-need-join: "<red>尚未拜入流派"
+  gui-skills-slot-empty: "<gray>空槽位 <used>/<slots>"
+  gui-skills-slot-locked: "<dark_gray>槽位需更高境界"
+  gui-skills-slot-filled-lore: "<gray>点击卸下"
+  gui-skill-lore-type-active: "<gray>主动 · 冷却 <cooldown> 秒"
+  gui-skill-lore-type-passive: "<gray>被动 · 习得后自动生效"
+  gui-skill-lore-level: "<gray>Lv.<level> · 经验 <xp></gray>"
+  gui-skill-lore-realm: "<gray>需境界：<yellow><realm></yellow>"
+  gui-skill-action-learn: "<aqua>点击领悟"
+  gui-skill-action-unequip: "<red>点击卸下"
+  gui-skill-action-select: "<yellow>点击选定施展"
+  gui-skill-action-passive: "<gray>被动自动生效"
+  gui-skill-action-locked: "<dark_gray>境界不足"
+  # 擂台面板
+  gui-arena-status-name: "<aqua>每日擂台"
+  gui-arena-lore-idle: "<gray>当前未开放报名 · 每日 <times> 开打"
+  gui-arena-lore-signup: "<gold>报名中！开打剩余 <seconds> 秒 · 已报 <count> 人"
+  gui-arena-lore-running: "<gold>比赛进行中：当前对局 <fight>"
+  gui-arena-lore-reward: "<gray>冠军奖励：<souls> 灵魂<extra>"
+  gui-arena-lore-rule: "<gray>统一装备，赛后归还随身物品"
+  gui-arena-lore-skills-allowed: "<gray>允许施展武学技能"
+  gui-arena-lore-skills-denied: "<red>禁止施展武学技能"
+  gui-arena-join-name: "<green>报名"
+  gui-arena-join-lore: "<gray>点击报名本届擂台"
+  gui-arena-quit-name: "<red>取消报名"
+  gui-arena-quit-lore: "<gray>点击取消本届报名"

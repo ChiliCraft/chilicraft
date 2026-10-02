@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "minecraft-plugin-development": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/minecraft-plugin-development/SKILL.md",
+      "computedHash": "0dd6605a2f0b6729e8b2d18f2ce5faca1a93275b0b1e575a2c7987bfa0c2f1f1"
+    }
+  }
+}

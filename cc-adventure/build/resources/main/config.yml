@@ -1,0 +1,233 @@
+# ============================================================
+# cc-adventure · 冒险线配置
+# 地城副本（每队独立实例）/ 远征（5 层随机房间）/ 世界 Boss
+# 修改后由 /cc reload 热载（订阅 core.reload 整体重建本缓存）
+# ============================================================
+
+# ---------- 组队 ----------
+party:
+  # 单支队伍人数上限（地城与远征共用同一支队伍）
+  max-size: 4
+
+# ---------- 地城 ----------
+dungeon:
+  enabled: true
+  # 独立地城世界（空世界，实例按槽位隔离，互不串场）
+  world-name: world_cc_dungeon
+  # 最大并发实例数（也是区域槽位数；满员时进入排队）
+  instance-slots: 8
+  # 槽位 x 方向间隔（格），必须大于最大地城 size.x
+  slot-stride: 256
+  # 实例区域基准高度
+  base-y: 64
+  # 区域清理每 tick 方块预算（分帧防卡主线程）
+  wipe-budget-per-tick: 4000
+  # 排队重试间隔（秒）
+  queue-retry-seconds: 5
+  # 地城默认时限（dungeons.yml 未填 time-limit-seconds 时兜底）
+  time-limit-seconds: 600
+
+# ---------- 远征 ----------
+expedition:
+  enabled: true
+  # 独立远征世界（航道按 x 方向大间隔隔离）
+  world-name: world_cc_expedition
+  # 层数（规格：5 层制，末层固定 Boss 房）
+  layers: 5
+  # 最大并发远征队数
+  max-runs: 4
+  # 每层通关灵魂（逐队员）
+  soul-per-layer: 5
+  # 全程通关追加灵魂（逐队员）
+  clear-bonus: 25
+  # 连续 N 次祝福后强制 1 次诅咒（规格：2:1 节律）
+  force-curse-after-blessings: 2
+  # 祝福/诅咒药水效果时长（tick；默认 600 秒覆盖一层）
+  effect-duration-ticks: 12000
+  # 前 4 层房间权重（末层恒为 Boss 房，不参与随机）
+  room-weights:
+    combat: 30     # 战斗房
+    elite: 15      # 精英房
+    chest: 10      # 宝箱房
+    trap: 10       # 陷阱房
+    rest: 10       # 休整房
+    shop: 10       # 商店房
+    event: 8       # 奇遇房
+    puzzle: 7      # 机关房
+  # 祝福池：类型:强度:名称（类型为药水效果名，强度 0=I 级）
+  blessings:
+    - "speed:1:让风告诉你"
+    - "strength:1:拙劲"
+    - "regeneration:1:糖水"
+    - "resistance:1:硬糖外壳"
+    - "water_breathing:0:水做的悲伤"
+    - "night_vision:0:夜巡"
+    - "jump_boost:1:飞鸟说"
+    - "haste:1:厚嘴唇星人的馈赠"
+  # 诅咒池：同上格式
+  curses:
+    - "slowness:1:滞留半梦界"
+    - "weakness:1:混入失败"
+    - "poison:0:过期辣酱"
+    - "blindness:0:迷航"
+    - "hunger:1:饿魔注视"
+    - "mining_fatigue:1:手腕打结"
+
+# ---------- 世界 Boss ----------
+boss:
+  enabled: true
+  # 环境触发条件巡检间隔（秒；雨天深海/雷暴/随机/深层按此节拍抽查）
+  check-seconds: 15
+  # Boss 技能事件间隔（秒）
+  skill-seconds: 6
+  # Boss 存活超时（分钟；0=不超时）。超时强制清除，避免 Boss 永久占位
+  despawn-minutes: 30
+
+# ---------- 集成 ----------
+integration:
+  # MythicMobs 在场且为 true 时，Boss 生成与技能交 MM 托管（bosses.yml 的 mythic-id）；
+  # MM 缺失或生成失败自动降级原版实体路径，无需改配置
+  mythicmobs: false
+
+# ---------- 消息模板（MiniMessage；空串=静默） ----------
+messages:
+  command:
+    permission: "你没有使用冒险线命令的权限。"
+    usage: "用法：/adventure [menu|party|dungeon|expedition|boss status|status]"
+    help: "冒险线：组队、地城、远征与世界 Boss。"
+  # 组队
+  party:
+    invited: "<gray>[冒险] </gray><aqua><player></aqua> <gray>邀请你加入队伍，/adventure party accept <player> 接受（60 秒内有效）。</gray>"
+    joined: "<gray>[冒险] </gray><aqua><player></aqua> <gray>加入了队伍。</gray>"
+    disbanded: "<gray>[冒险] </gray><gray>队伍已解散。</gray>"
+    left: "<gray>[冒险] </gray><aqua><player></aqua> <gray>离开了队伍。</gray>"
+    kicked-you: "<gray>[冒险] </gray><red>你已被移出队伍。</red>"
+    kicked: "<gray>[冒险] </gray><aqua><player></aqua> <gray>已被移出队伍。</gray>"
+  # 地城
+  dungeon:
+    start: "<gray>[地城] </gray><gold>「<dungeon>」开启！</gold><gray>时限 <seconds> 秒。</gray>"
+    wave: "<gray>[地城] </gray><yellow>第 <wave>/<total> 波来袭！</yellow>"
+    offer: "<gray>[地城] </gray><aqua><player></aqua> <gray>献祭进度 <count>/<target>。</gray>"
+    gate: "<gray>[地城] </gray><light_purple>界门 <gate> 已点亮。</light_purple>"
+    cleared: "<gray>[地城] </gray><gold>「<dungeon>」通关！</gold><gray>灵魂 +<soul>。</gray>"
+    failed: "<gray>[地城] </gray><red>「<dungeon>」挑战失败（<reason>）。</red>"
+  # 远征
+  expedition:
+    start: "<gray>[远征] </gray><gold>远征启程！</gold><gray>目标：穿越 <layers> 层。</gray>"
+    layer: "<gray>[远征] </gray><yellow>—— 第 <layer> 层：<room> ——</yellow>"
+    bless: "<gray>[远征] </gray><green>祝福降临：<bold><effect></bold></green>"
+    curse: "<gray>[远征] </gray><red>诅咒缠身：<bold><effect></bold></red>"
+    door-locked: "<gray>[远征] </gray><gray>门扉紧闭——先肃清本层。</gray>"
+    chest: "<gray>[远征] </gray><gray>开启宝箱，全队灵魂 +<soul>。</gray>"
+    shop-poor: "<gray>[远征] </gray><red>灵魂不足，无法交易。</red>"
+    shop-bought: "<gray>[远征] </gray><gray>购得祝福：<bold><effect></bold>。</gray>"
+    cleared: "<gray>[远征] </gray><green>第 <layer> 层肃清，门扉已点亮。</green>"
+    puzzle: "<gray>[远征] </gray><green>机关咬合，门扉已点亮。</green>"
+    done: "<gray>[远征] </gray><gold>远征完成！</gold><gray>追加灵魂 +<soul>。</gray>"
+    quit: "<gray>[远征] </gray><gray>你已脱离远征。</gray>"
+  # 箱子 GUI（/adventure 无参数打开主面板；按钮名/lore 均为 MiniMessage）
+  gui:
+    # 各面板标题
+    title-main: "<dark_gray>冒险菜单"
+    title-party: "<dark_gray>冒险 · 组队"
+    title-party-invite: "<dark_gray>冒险 · 邀请玩家"
+    title-dungeon: "<dark_gray>冒险 · 地城"
+    title-expedition: "<dark_gray>冒险 · 远征"
+    title-boss: "<dark_gray>冒险 · 世界 Boss"
+    # 通用按钮
+    close: "<red>关闭"
+    back: "<yellow>返回冒险菜单"
+    # 主面板四个入口
+    main-party-name: "<gold>组队"
+    main-party-lore: "<gray>创建/管理队伍，查看邀请"
+    main-dungeon-name: "<gold>地城"
+    main-dungeon-lore: "<gray>选择地城，组队或单人挑战"
+    main-expedition-name: "<gold>远征"
+    main-expedition-lore: "<gray>随机房间逐层深入，祝福与诅咒同行"
+    main-boss-name: "<gold>世界 Boss"
+    main-boss-lore: "<gray>图鉴、触发条件与你的进度"
+    # 通用操作反馈（组队/地城/远征共用）
+    result:
+      no-party: "<gray>[冒险] </gray><red>你还没有队伍。"
+      not-leader: "<gray>[冒险] </gray><red>只有队长可以操作。"
+      disabled: "<gray>[冒险] </gray><red>该玩法当前未开启。"
+      world-fail: "<gray>[冒险] </gray><red>冒险世界暂不可用，请稍后再试。"
+    # 队伍面板
+    party-status-none-name: "<gold>尚未加入队伍"
+    party-status-none-lore: "<gray>创建队伍或接受邀请后，可组队进入地城与远征"
+    party-create-name: "<green>创建队伍"
+    party-create-lore: "<gray>你将成为队长，队伍上限 <max> 人"
+    party-invited-name: "<aqua><player> 的队伍"
+    party-invited-lore: "<yellow>点击接受邀请（<count>/<max> 人）"
+    party-status-name: "<gold>队伍（<count>/<max> 人）"
+    party-status-leader-line: "<gray>队长：<aqua><leader>"
+    party-status-role-leader: "<yellow>你是队长"
+    party-status-role-member: "<gray>你是队员"
+    party-member-leader-tag: "<gold>★ 队长"
+    party-member-kick-hint: "<red>点击踢出队伍"
+    party-invite-name: "<green>邀请玩家"
+    party-invite-lore: "<gray>仅队长可用；邀请 60 秒内有效"
+    party-leave-name: "<red>离开队伍"
+    party-leave-lore: "<gray>队长离开将解散队伍"
+    party-pick-hint: "<yellow>点击邀请"
+    # 队伍操作反馈
+    party-result:
+      created: "<gray>[冒险] </gray><green>队伍已创建。"
+      create-fail: "<gray>[冒险] </gray><red>你已经在队伍中。"
+      left: "<gray>[冒险] </gray><gray>你已离开队伍。"
+      invite-ok: "<gray>[冒险] </gray><green>已邀请 <player>。"
+      invite-invalid: "<gray>[冒险] </gray><red>目标玩家不在线。"
+      invite-already-member: "<gray>[冒险] </gray><red>对方已在队伍中。"
+      invite-full: "<gray>[冒险] </gray><red>队伍已满员。"
+      invite-target-busy: "<gray>[冒险] </gray><red>对方已有其他队伍。"
+      accept-ok: "<gray>[冒险] </gray><green>已加入队伍。"
+      accept-inviter-gone: "<gray>[冒险] </gray><red>邀请已失效（队伍不存在）。"
+      accept-no-invite: "<gray>[冒险] </gray><red>没有待处理的邀请。"
+      accept-invite-expired: "<gray>[冒险] </gray><red>邀请已过期。"
+      accept-already-in-party: "<gray>[冒险] </gray><red>你已在队伍中。"
+      accept-full: "<gray>[冒险] </gray><red>队伍已满员。"
+      kick-ok: "<gray>[冒险] </gray><gray>已移出 <player>。"
+      kick-not-member: "<gray>[冒险] </gray><red>对方不在队伍中。"
+    # 地城面板
+    dungeon-status-name: "<gold>地城状态"
+    dungeon-status-running: "<gray>进行中：<aqua><dungeon>"
+    dungeon-status-queued: "<gray>排队中：<yellow><dungeon>"
+    dungeon-status-idle: "<gray>未在地城中"
+    dungeon-entry-lore-mechanic: "<gray>机制：<white><mechanic>"
+    dungeon-entry-lore-time: "<gray>时限：<white><seconds> 秒"
+    dungeon-entry-lore-reward: "<gray>通关灵魂：<yellow><soul>"
+    dungeon-entry-hint: "<yellow>点击进入"
+    dungeon-leave-name: "<red>离开地城"
+    dungeon-leave-lore: "<gray>立即脱离当前地城/排队（地城按失败结算）"
+    # 地城操作反馈
+    dungeon-result:
+      left: "<gray>[地城] </gray><gray>已离开地城。"
+      unknown: "<gray>[地城] </gray><red>未知地城。"
+      in-dungeon: "<gray>[地城] </gray><red>你已在地城中。"
+      already-queued: "<gray>[地城] </gray><red>你已在排队中。"
+      queued: "<gray>[地城] </gray><yellow>实例已满，已加入排队。"
+      failed: "<gray>[地城] </gray><red>进入失败：<reason>"
+    # 远征面板
+    expedition-status-name: "<gold>远征状态"
+    expedition-status-running: "<gray>第 <layer>/<total> 层 · 已获灵魂 <soul>"
+    expedition-status-idle: "<gray>未在远征中"
+    expedition-start-name: "<green>开始远征"
+    expedition-start-lore: "<gray>穿越 <layers> 层随机房间；队长发起，全队同行"
+    expedition-info-name: "<aqua>远征说明"
+    expedition-info-lore-layers: "<gray>层数：<white><layers>"
+    expedition-info-lore-soul: "<gray>每层灵魂：<yellow><soul>"
+    expedition-info-lore-bonus: "<gray>通关追加：<yellow><bonus>"
+    expedition-leave-name: "<red>离开远征"
+    expedition-leave-lore: "<gray>按当前进度结算灵魂"
+    # 远征操作反馈
+    expedition-result:
+      in-expedition: "<gray>[远征] </gray><red>你已在远征中。"
+      busy: "<gray>[远征] </gray><red>远征航道已满，请稍后再试。"
+      failed: "<gray>[远征] </gray><red>开始失败：<reason>"
+    # Boss 面板
+    boss-status-name: "<gold>世界 Boss"
+    boss-status-active: "<gray>追踪中：<aqua><boss>"
+    boss-status-streak: "<gray>夜间连死：<yellow><count>/<need>"
+    boss-entry-lore-trigger: "<gray>触发：<white><trigger>"
+    boss-entry-lore-health: "<gray>生命：<red><health>"
+    boss-entry-lore-first: "<gray>首杀灵魂：<yellow><soul>"

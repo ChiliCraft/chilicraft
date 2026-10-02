@@ -1,0 +1,23 @@
+# ChiliCraft 生存压力附属（cc-survival）
+name: cc-survival
+version: "${version}"
+main: com.chilicraft.survival.ChiliSurvivalPlugin
+api-version: "1.21"
+authors: [ChiliCraft]
+description: 生存压力：饥饿加速 / 体温 / 负重 / 耐久损耗（按全局模式调节强度）
+
+# 硬依赖核心：核心未启用时本附属自动禁用
+depend: [cc-core]
+# 兼容基线：兼容的核心 API 版本（核心装载时校验，未达标给出可读告警）
+compatible-core: ">=1.0"
+softdepend: []
+
+permissions:
+  chilicraft.survival.use:
+    description: 允许查看生存压力状态
+    default: true
+  chilicraft.survival.admin:
+    description: 生存模块管理权限（预留）
+    default: op
+    children:
+      chilicraft.survival.use: true

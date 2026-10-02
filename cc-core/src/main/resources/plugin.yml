@@ -1,0 +1,38 @@
+# ChiliCraft 核心插件（cc-core）
+name: cc-core
+version: "${version}"
+main: com.chilicraft.core.ChiliCorePlugin
+api-version: "1.21"
+authors: [ChiliCraft]
+description: ChiliCraft 核心：档案 / 全局模式 / 参数服务 / 事件总线 / 数据库 / 家园区 / 灵魂货币
+
+# 无硬依赖；9 个附属模块以 depend: [cc-core] 挂接
+depend: []
+# 软依赖：PlaceholderAPI（全局占位符 %chilicraft_*%，未装时静默降级）
+softdepend: [PlaceholderAPI]
+
+commands:
+  cc:
+    description: ChiliCraft 主指令（菜单 / 模式切换 / 家园区 / 灵魂余额 / 重载）
+    usage: /cc help
+    aliases: [chilicraft]
+  menu:
+    description: 打开 ChiliCraft 分类主菜单
+    usage: /menu
+
+permissions:
+  chilicraft.menu:
+    description: 打开 ChiliCraft 分类主菜单
+    default: true
+  chilicraft.use:
+    description: 打开 /cc 主菜单
+    default: true
+  chilicraft.mode:
+    description: 切换全局模式（/cc mode）
+    default: true
+  chilicraft.home:
+    description: 设置与传送家园区锚点（/cc sethome、/cc home）
+    default: true
+  chilicraft.admin:
+    description: 管理操作（/cc reload）
+    default: op

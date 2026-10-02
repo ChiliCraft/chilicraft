@@ -1,0 +1,30 @@
+# ChiliCraft 冒险线附属（cc-adventure）
+name: cc-adventure
+version: "${version}"
+main: com.chilicraft.adventure.ChiliAdventurePlugin
+api-version: "1.21"
+authors: [ChiliCraft]
+description: 地城副本（每队独立实例）/ 远征（5 层随机房间）/ 5 世界 Boss（事件触发）
+
+# 硬依赖核心：核心未启用时本附属自动禁用
+depend: [cc-core]
+# 兼容基线：兼容的核心 API 版本（核心装载时校验，未达标给出可读告警）
+compatible-core: ">=1.0"
+# MythicMobs 可选：在场且 integration.mythicmobs 开启时托管世界 Boss 技能（缺失自动降级）
+softdepend: [MythicMobs]
+
+commands:
+  adventure:
+    description: 冒险线命令（组队 / 地城 / 远征 / Boss）
+    usage: /adventure [menu|party|dungeon|expedition|boss|status]
+
+permissions:
+  chilicraft.adventure.use:
+    description: 允许使用冒险线玩家命令
+    default: true
+  chilicraft.adventure.user:
+    description: 兼容旧冒险线玩家权限
+    default: true
+  chilicraft.adventure.admin:
+    description: 冒险线管理权限
+    default: op

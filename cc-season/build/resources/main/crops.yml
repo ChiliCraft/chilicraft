@@ -1,0 +1,9 @@
+# 季节作物配置：0 表示停止生长，0–1 按概率减速，1–2 有概率额外生长一级；温室可绕过限制
+crops:
+  WHEAT: {spring: 1.20, summer: 1.00, autumn: 0.80, winter: 0.00}
+  CARROTS: {spring: 1.15, summer: 1.00, autumn: 0.75, winter: 0.00}
+  POTATOES: {spring: 1.10, summer: 1.00, autumn: 0.80, winter: 0.00}
+  BEETROOTS: {spring: 1.00, summer: 0.90, autumn: 1.10, winter: 0.00}
+greenhouse:
+  enabled: true
+  glass-above: 3

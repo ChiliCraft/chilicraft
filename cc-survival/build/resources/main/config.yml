@@ -1,0 +1,166 @@
+# ============================================================
+#  ChiliCraft 生存压力配置（cc-survival）
+#
+#  * 全部数值可调；/cc reload 后由 core.reload 事件即时生效
+#  * 强度 = 本配置数值 × 核心模式参数（adventure / cozy 各自的
+#    hunger-decay、weight-limit、durability-cost 基准倍率，
+#    见 cc-core config.yml 的 params 段）
+#  * 文本均为 MiniMessage 格式：<gold>金色</gold>、<newline> 等
+# ============================================================
+
+# ---------- 饥饿 ----------
+hunger:
+  enabled: true
+  # 模块饥饿倍率（规格值 1.5）：总倍率 = 此值 × 核心模式参数
+  # adventure 白天 = 1.5 × 1.0 = 1.5 倍；cozy = 1.5 × 0.3 = 0.45 倍
+  multiplier: 1.5
+  # 夜间额外倍率（规格值 2.0）：夜晚总倍率再乘此值
+  night-multiplier: 2.0
+  # 假定原版每秒基础耗竭量：加速时每秒额外施加
+  # base × (总倍率 - 1) 的 exhaustion（0.02 约 4 分钟掉 1 格饱食的量级）
+  base-exhaustion: 0.02
+  # 夜间判定（原版时间刻）：13042 = 黄昏入夜 / 23458 = 破晓
+  night-start: 13042
+  night-end: 23458
+
+# ---------- 体温 ----------
+temperature:
+  enabled: true
+  # 体温初值（0-100）
+  initial: 70.0
+  # 每秒向目标体温靠近的比例（0.05 = 每秒缩短 5% 差距）
+  lerp: 0.05
+  # 夜间目标体温修正（加到环境目标值上）
+  night-offset: -10.0
+  # 在水中/雨中目标体温修正
+  wet-offset: -20.0
+  # 热源检测：仅当环境目标低于热源保障值时才扫描周围方块（省性能）
+  heat-guarantee: 70.0
+  heat-source:
+    # 热源扫描半径（格，3 = 3×3×3 立方）
+    radius: 3
+    # 热源方块列表（Material 名）
+    blocks: [CAMPFIRE, FIRE, SOUL_FIRE, LAVA, MAGMA_BLOCK]
+  # 生物群系温度 → 目标体温（区间下含上不含，升序匹配第一个下界 ≤ 群系温度的档位）
+  climates:
+    - max-biome-temp: 0.15   # 雪原 / 冰刺等极寒
+      target: 20.0
+    - max-biome-temp: 0.4    # 针叶林 / 山地等寒冷
+      target: 45.0
+    - max-biome-temp: 0.8    # 平原 / 森林等温和
+      target: 65.0
+    - max-biome-temp: 99.0   # 沙漠 / 丛林等燥热
+      target: 95.0
+  # 分区效果（体温下含上不含，从上往下匹配第一个 min ≤ 体温的档位）
+  zones:
+    - min: 90                 # 90-100 燥热：额外耗竭
+      slow-amplifier: -1      # -1 = 不施加缓慢
+      weakness-amplifier: -1  # -1 = 不施加虚弱
+      extra-exhaustion: 0.02  # 每秒额外耗竭
+    - min: 60                 # 60-89 舒适：无惩罚
+      slow-amplifier: -1
+      weakness-amplifier: -1
+      extra-exhaustion: 0.0
+    - min: 40                 # 40-59 微冷：无惩罚（仅提示）
+      slow-amplifier: -1
+      weakness-amplifier: -1
+      extra-exhaustion: 0.0
+    - min: 20                 # 20-39 寒冷：缓慢 I
+      slow-amplifier: 0
+      weakness-amplifier: -1
+      extra-exhaustion: 0.0
+    - min: 0                  # 0-19 失温：缓慢 II + 虚弱 I + 周期伤害
+      slow-amplifier: 1
+      weakness-amplifier: 0
+      extra-exhaustion: 0.0
+  # 失温周期伤害：每 interval 秒扣 damage 点（1.0 = 半颗心）
+  hypothermia-interval: 10
+  hypothermia-damage: 1.0
+
+# ---------- 负重 ----------
+weight:
+  enabled: true
+  # 负重上限（kg）。实际上限 = 此值 × 核心模式参数 weight-limit
+  limit: 200.0
+  # 未在 values 中声明的物品单件重量（kg），按堆叠数量累乘
+  default-per-item: 0.1
+  # 常用物品单件重量覆盖表（Material 名: kg/件）
+  values:
+    DIAMOND_SWORD: 1.5
+    DIAMOND_AXE: 1.8
+    DIAMOND_PICKAXE: 1.5
+    DIAMOND_SHOVEL: 1.2
+    DIAMOND_HOE: 1.2
+    IRON_SWORD: 1.2
+    IRON_AXE: 1.5
+    IRON_PICKAXE: 1.3
+    BOW: 0.8
+    CROSSBOW: 1.0
+    SHIELD: 2.0
+    TRIDENT: 2.0
+    ELYTRA: 1.0
+    ANVIL: 12.0
+    CHIPPED_ANVIL: 12.0
+    DAMAGED_ANVIL: 12.0
+    OBSIDIAN: 2.5
+    DIAMOND: 0.1
+    EMERALD: 0.05
+    GOLD_INGOT: 0.3
+    IRON_INGOT: 0.3
+    COPPER_INGOT: 0.3
+    COAL: 0.2
+    WHEAT: 0.05
+    BREAD: 0.2
+    COOKED_BEEF: 0.3
+    EGG: 0.1
+  # 超重惩罚（按实际上限的百分比触发）
+  slow-threshold: 70          # ≥70% 减速（缓慢）
+  slow-amplifier: 0           # 缓慢等级（0 = 缓慢 I，约 -15% 移速）
+  jump-block-threshold: 100   # ≥100% 无法跳跃
+  # 效果刷新间隔秒数对应持续 tick（40 = 2 秒自动过期，防重启残留）
+  effect-duration-ticks: 40
+
+# ---------- 耐久 ----------
+durability:
+  enabled: true
+  # 模块耐久损耗倍率（规格值 1.5）。实际 = 此值 × 核心模式参数
+  # adventure = 1.5 × 1.0 = 1.5 倍；cozy = 1.5 × 0.3 = 0.45 倍
+  multiplier: 1.5
+
+# ---------- HUD ----------
+hud:
+  # 动作栏是否显示（体温分区 + 负重）
+  actionbar: true
+  # 负重/体温均为正常时是否隐藏动作栏（true = 平时不打扰）
+  hide-when-normal: true
+
+# ---------- 方街安全区（巡演联动） ----------
+street:
+  # 方街世界名单：名单内世界的生存压力按倍率折减
+  worlds: [world_street]
+  # 压力折减倍率（0.5 = 饥饿/燥热/失温伤害减半；体温 slow/weakness 离散档位不折减）
+  pressure-multiplier: 0.5
+
+# ---------- 消息模板（MiniMessage） ----------
+messages:
+  gui-title-status: "<gold>生存状态"
+  gui-status-name: "<gold>当前生存状态"
+  gui-status-hunger: "<gray>饥饿：<value></gray>"
+  gui-status-temperature: "<gray>体温：<value></gray>"
+  gui-status-weight: "<gray>负重：<value>%</gray>"
+  gui-status-durability: "<gray>耐久损耗：<value></gray>"
+  gui-status-street: "<gray>方街减压世界：<value></gray>"
+  gui-close: "<red>关闭"
+  help: "<gray>使用 /cc survival status 查看生存状态。</gray>"
+  usage: "<yellow>用法：/cc survival [menu|status]</yellow>"
+  players-only: "<red>该状态页只能由玩家查看。</red>"
+  temp-scorching: "<red>燥热</red>"        # 体温 90-100
+  temp-comfort: "<green>舒适</green>"      # 体温 60-89
+  temp-mild: "<yellow>微冷</yellow>"       # 体温 40-59
+  temp-cold: "<blue>寒冷</blue>"           # 体温 20-39
+  temp-freezing: "<dark_aqua>失温</dark_aqua>" # 体温 0-19
+  weight-fine: "<gray>负重 <pct>%</gray>"
+  weight-heavy: "<yellow>负重 <pct>%（超重减速）</yellow>"
+  weight-overload: "<red>负重 <pct>%（过载，无法跳跃）</red>"
+  # 巡演联动：进入方街时提示（留空或删除则静默）
+  street-calm: "<gray>你走进了方街——游乐园的喧嚣盖过了生存压力。</gray>"
