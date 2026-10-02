@@ -1,1 +1,12 @@
 .DS_Store
+
+# Gradle 构建产物与缓存
+build/
+.gradle/
+
+# 本地测试服务端（含第三方软依赖 jar，不入库；CI 构建前自行补齐）
+test-server/
+
+# 编辑器 / IDE
+.idea/
+*.iml
