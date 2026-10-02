@@ -36,6 +36,8 @@ ChiliChill 2026 巡演「混入人类计划 II：方街」主题 Minecraft 服�
 
 构建产物在各模块 `build/libs/*.jar`（cc-core 额外产出 shadowJar，已合并 shade 依赖）。
 
+每次 push 由 [.github/workflows/build.yml](.github/workflows/build.yml) 在 JDK 21 上自动执行 `gradlew build`；CI 会先把 `test-server/plugins/` 下的第三方软依赖 jar 按构建脚本期望的文件名补齐（这些 jar 不入库），并把各模块 jar 上传为构建产物。
+
 ### 部署
 
 1. 将全部 jar 放入服务端 `plugins/` 目录；
