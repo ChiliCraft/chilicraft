@@ -78,7 +78,7 @@ Windows PowerShell：
 |---|---|---|
 | 巡演地城 ×10 | cc-adventure | `dungeons.yml`：守锅 / 献祭 / 承重 / 水下 / 双界五机制各两座，命名取自深夜食堂、眼镜的葬礼、山遥路远、水做的回廊、方街镜面巷口等主题 |
 | 远征祝福 / 诅咒池 | cc-adventure | `config.yml` `expedition.blessings/curses`：让风告诉你（移速）、飞鸟说（跳跃）、饿魔注视（饥饿）等曲目命名 |
-| 世界 Boss ×5 | cc-adventure | `bosses.yml`：饿魔母体·真身按玩家夜间连续死亡触发（逐人累计），水做之影 / 台风之眼 / 梦魇按环境概率触发；幻形鹦鹉 `RANDOM` 0.1%/60tick，概率触发型统一套用「能力值」（`config.yml` `boss.capability`：背包攻击/防御/击败/账号年龄/生存五项相乘，`/adventure boss debug` 查看分项） |
+| 世界 Boss ×5 | cc-adventure | `bosses.yml`：饿魔母体·真身按玩家夜间连续死亡触发（逐人累计），水做之影 / 台风之眼 / 梦魇按环境概率触发；幻形鹦鹉 `RANDOM` 0.5%/60tick，概率触发型套用「能力值」（每 Boss `capability` 段独立曲线：背包攻击 + 盔甲防御各走钟形相乘，`/adventure boss debug` 查看分项） |
 | 旧眼镜祭品 | cc-soul | 葬礼仪式主手持 SPYGLASS 上供，站桩时长 ×0.5（`funeral.offerings.old-glasses`） |
 | 《不安灵魂收容所》 | cc-soul | 死亡播报以收容所口吻命名（`messages.death-sanctuary`，模板缺失静默） |
 | 「下等马」安慰礼 | cc-martial | 竞技场败者获灵魂安慰礼（`arena.loser-consolation-souls`，0 关闭） |
